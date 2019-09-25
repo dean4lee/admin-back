@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.inslee.adminback.model.dao.sys.SysResMapper">
+    <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysRes">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="perm_char" property="permChar" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="seq" property="seq" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+        <result column="creator" property="creator" jdbcType="BIGINT"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="modifier" property="modifier" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="DTOResultMap" type="cn.inslee.adminback.model.dto.sys.SysResDTO" extends="BaseResultMap">
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, `name`, `type`, url, parent_id, perm_char, icon, seq,
+    del_flag, creator, creation_time, modifier, modify_time
+    </sql>
+    <sql id="Associate_View_List">
+    res.id, res.`name`, res.`type`, res.url, res.parent_id, res.perm_char, res.icon, res.seq
+    </sql>
+
+    <select id="selectByRoleIds" parameterType="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Associate_View_List"/>
+        FROM
+        sys_res res,
+        sys_role_res rr
+        WHERE
+        rr.res_id = res.id
+        AND res.del_flag = false
+        AND res.perm_char is not null
+        AND res.perm_char != ''
+        AND rr.role_id IN
+        <foreach collection="list" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+        GROUP BY res.id
+    </select>
+
+    <select id="selectMenuByRoleIds" parameterType="list" resultMap="DTOResultMap">
+        SELECT
+        <include refid="Associate_View_List"/>
+        FROM
+        sys_res res,
+        sys_role_res rr
+        WHERE
+        rr.res_id = res.id
+        AND res.del_flag = false
+        AND rr.role_id IN
+        <foreach collection="list" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+        GROUP BY res.id
+    </select>
+
+    <update id="updateById" parameterType="cn.inslee.adminback.model.domain.sys.SysRes">
+      UPDATE sys_res
+      SET `name` = #{name},
+        url = #{url},
+        parent_id = #{parentId},
+        perm_char = #{permChar},
+        icon = #{icon},
+        seq = #{seq},
+        modifier = #{modifier},
+        modify_time = #{modifyTime}
+      WHERE
+	    id = #{id}
+    </update>
+
+    <select id="countRoleByResId" parameterType="long" resultType="long">
+      SELECT
+	    count( * )
+      FROM
+	    sys_role role,
+	    sys_role_res rr
+      WHERE
+	    role.del_flag = FALSE
+	  AND role.id = rr.role_id
+	  AND rr.res_id = #{resId}
+    </select>
+</mapper>

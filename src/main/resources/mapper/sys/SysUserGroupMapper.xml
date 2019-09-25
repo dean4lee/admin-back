@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.inslee.adminback.model.dao.sys.SysUserGroupMapper" >
+  <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysUserGroup" >
+    <id column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="group_id" property="groupId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, group_id
+  </sql>
+</mapper>

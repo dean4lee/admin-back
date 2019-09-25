@@ -1,0 +1,36 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    include: db
+
+  #设置jackson返回结果去除null值及时间转换
+  jackson:
+    default-property-inclusion: non_empty
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  cache:
+    type: redis
+  #设置编码格式
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+  #邮件设置
+  mail:
+    default-encoding: UTF-8
+    host: smtp.163.com
+    port: 465
+    username: username@163.com
+    password: password
+    properties:
+      mail.smtp.ssl.enable: true
+
+mail-subject:
+  #自定义邮件主题
+  register: "用户注册成功"
+  resetPwd: "重置密码提醒"

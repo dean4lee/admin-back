@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.inslee.adminback.model.dao.sys.SysDeptMapper" >
+  <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysDept" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="creator" property="creator" jdbcType="BIGINT" />
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="modifier" property="modifier" jdbcType="BIGINT" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, parent_id, del_flag, creator, creation_time, modifier, modify_time
+  </sql>
+</mapper>

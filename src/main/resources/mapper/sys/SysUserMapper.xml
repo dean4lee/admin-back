@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.inslee.adminback.model.dao.sys.SysUserMapper">
+    <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="BIT"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+        <result column="creator" property="creator" jdbcType="BIGINT"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="modifier" property="modifier" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="DTOResultMap" type="cn.inslee.adminback.model.dto.sys.SysUserDTO" extends="BaseResultMap">
+        <collection property="roles" ofType="cn.inslee.adminback.model.domain.sys.SysRole">
+            <id column="role_id" property="id"/>
+            <result column="role_name" property="name"/>
+        </collection>
+        <collection property="groups" ofType="cn.inslee.adminback.model.domain.sys.SysGroup">
+            <id column="group_id" property="id"/>
+            <result column="group_name" property="name"/>
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, username, password, salt, nickname, sex, age, email, phone, remark,
+    status, del_flag, creator, creation_time, modifier, modify_time
+  </sql>
+    <sql id="Associate_View_List">
+    `user`.id, `user`.username,`user`.status, `user`.nickname,
+    `user`.sex, `user`.age, `user`.email, `user`.phone,
+    `user`.remark, `user`.creator, `user`.creation_time,
+    `user`.modifier, `user`.modify_time
+  </sql>
+
+    <select id="selectList" parameterType="cn.inslee.adminback.model.query.sys.UserQuery" resultMap="DTOResultMap">
+        SELECT
+        `user`.id, `user`.username,
+        `user`.status, `user`.remark,
+        `user`.nickname, `user`.sex,
+        `user`.age, `user`.email, `user`.phone,
+        role.id role_id, role.name role_name,
+        `group`.id group_id, `group`.name group_name
+        FROM
+        (SELECT
+        <include refid="Associate_View_List"/>
+        FROM
+        sys_user `user` LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
+        LEFT JOIN sys_role role ON role.id = ur.role_id
+        LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
+        LEFT JOIN sys_group `group` ON `group`.id = ug.group_id
+        WHERE
+        `user`.del_flag = 0
+        <if test="roleId != null">
+            AND role.id = #{roleId}
+        </if>
+        <if test="groupId != null">
+            AND `group`.id = #{groupId}
+        </if>
+        <if test="keyword != null">
+            AND `user`.username LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="status != null">
+            AND `user`.status = #{status}
+        </if>
+        GROUP BY `user`.id
+        ORDER BY `user`.id desc
+        <if test="pageSize > 0">
+            LIMIT #{pageNum}, #{pageSize}
+        </if>
+        ) `user` LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
+        LEFT JOIN sys_role role ON role.id = ur.role_id
+        LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
+        LEFT JOIN sys_group `group` ON `group`.id = ug.group_id
+        ORDER BY `user`.id desc
+    </select>
+    <select id="countList" parameterType="cn.inslee.adminback.model.query.sys.UserQuery" resultType="long">
+        SELECT
+        COUNT(*)
+        FROM
+        (SELECT
+        <include refid="Associate_View_List"/>
+        FROM
+        sys_user `user` LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
+        LEFT JOIN sys_role role ON role.id = ur.role_id
+        LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
+        LEFT JOIN sys_group `group` ON `group`.id = ug.group_id
+        WHERE
+        `user`.del_flag = 0
+        <if test="roleId != null">
+            AND role.id = #{roleId}
+        </if>
+        <if test="groupId != null">
+            AND `group`.id = #{groupId}
+        </if>
+        <if test="keyword != null">
+            AND `user`.username LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="status != null">
+            AND `user`.status = #{status}
+        </if>
+        GROUP BY `user`.id
+        ) `user`
+    </select>
+
+    <update id="updateById" parameterType="cn.inslee.adminback.model.domain.sys.SysUser">
+        UPDATE sys_user
+        SET
+        nickname = #{nickname},
+        phone = #{phone},
+        email = #{email},
+        sex = #{sex},
+        age = #{age},
+        remark = #{remark},
+        modifier = #{modifier},
+        modify_time = #{modifyTime}
+        WHERE
+	    id = #{id}
+    </update>
+
+    <update id="updateBySelf" parameterType="cn.inslee.adminback.model.domain.sys.SysUser">
+        UPDATE sys_user
+        SET
+        <if test="password != null">
+            password = #{password},
+        </if>
+        nickname = #{nickname},
+        phone = #{phone},
+        email = #{email},
+        sex = #{sex},
+        age = #{age},
+        modifier = #{modifier},
+        modify_time = #{modifyTime}
+        WHERE
+        id = #{id}
+    </update>
+</mapper>

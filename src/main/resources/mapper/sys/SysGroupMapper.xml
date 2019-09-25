@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.inslee.adminback.model.dao.sys.SysGroupMapper">
+    <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysGroup">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+        <result column="creator" property="creator" jdbcType="BIGINT"/>
+        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="modifier" property="modifier" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="DTOResultMap" type="cn.inslee.adminback.model.dto.sys.SysGroupDTO" extends="BaseResultMap">
+        <collection property="roles" ofType="cn.inslee.adminback.model.domain.sys.SysRole">
+            <id column="role_id" property="id"/>
+            <result column="role_name" property="name"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, `name`, remark, del_flag, creator, creation_time, modifier, modify_time
+    </sql>
+
+    <sql id="View_List">
+        id, `name`, remark
+    </sql>
+
+    <sql id="Associate_View_List">
+        `group`.id, `group`.`name`, `group`.remark
+    </sql>
+
+    <select id="selectList" parameterType="cn.inslee.adminback.model.query.sys.GroupQuery" resultMap="DTOResultMap">
+      SELECT
+        `group`.id, `group`.name, `group`.remark, role.id role_id, role.name role_name
+      FROM
+	    ( SELECT
+          <include refid="Associate_View_List"/>
+          FROM sys_group `group`,
+          sys_group_role gr,
+          sys_role role
+        WHERE `group`.del_flag = 0
+        AND `group`.id = gr.group_id
+        AND role.id = gr.role_id
+          <if test="keyword != null">
+            AND `group`.`name` LIKE CONCAT('%', #{keyword}, '%')
+          </if>
+        <if test="roleId != null">
+            AND role.id = #{roleId}
+        </if>
+          GROUP BY `group`.id
+          ORDER BY `group`.id DESC
+          <if test="pageSize > 0">
+            LIMIT #{pageNum}, #{pageSize}
+          </if>) `group`, sys_group_role gr, sys_role role
+      WHERE
+	    `group`.id = gr.group_id
+	  AND role.id = gr.role_id
+      ORDER BY `group`.id DESC
+    </select>
+
+    <select id="countList" parameterType="cn.inslee.adminback.model.query.sys.GroupQuery" resultType="long">
+        SELECT
+          COUNT(*)
+        FROM
+        (
+        SELECT
+        <include refid="Associate_View_List"/>
+        FROM sys_group `group`,
+        sys_group_role gr,
+        sys_role role
+        WHERE `group`.del_flag = 0
+        AND `group`.id = gr.group_id
+        AND role.id = gr.role_id
+        <if test="keyword != null">
+            AND `group`.`name` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="roleId != null">
+            AND role.id = #{roleId}
+        </if>
+        GROUP BY `group`.id
+        ) a
+    </select>
+
+    <update id="updateById" parameterType="cn.inslee.adminback.model.domain.sys.SysGroup">
+        UPDATE
+          sys_group
+        SET
+          `name` = #{name},
+          remark = #{remark},
+          modifier = #{modifier},
+          modify_time = #{modifyTime}
+        WHERE
+          id = #{id}
+    </update>
+
+    <select id="countUserByGroupId" parameterType="long" resultType="long">
+      SELECT
+	    count( * )
+      FROM
+	    sys_user_group ug,
+	    sys_user `user`
+      WHERE
+	    `user`.del_flag = FALSE
+	  AND ug.user_id = `user`.id
+	  AND ug.group_id = #{groupId}
+    </select>
+</mapper>

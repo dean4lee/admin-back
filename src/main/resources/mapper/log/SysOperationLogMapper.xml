@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.inslee.adminback.model.dao.log.SysOperationLogMapper" >
+  <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.log.SysOperationLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="username" property="username" jdbcType="VARCHAR"/>
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="VARCHAR" />
+    <result column="exec_time" property="execTime" jdbcType="BIGINT" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="url" property="url" jdbcType="LONGVARCHAR" />
+    <result column="params" property="params" jdbcType="LONGVARCHAR" />
+    <result column="result" property="result" jdbcType="LONGVARCHAR" />
+    <result column="exception" property="exception" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, username, ip, method, exec_time, `value`, create_time,
+    status, url, params, result, `exception`
+  </sql>
+</mapper>
