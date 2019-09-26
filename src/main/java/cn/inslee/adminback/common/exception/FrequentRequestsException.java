@@ -1,9 +1,10 @@
 package cn.inslee.adminback.common.exception;
 
 /**
+ * 请求频繁异常
+ *
  * @author dean.lee
  * <p>
- * 请求频繁异常
  */
 public class FrequentRequestsException extends RuntimeException {
     public FrequentRequestsException() {

@@ -7,9 +7,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 纪录系统日志
+ *
+ * @see cn.inslee.adminback.common.aspect.LogAspect
+ *
  * @author dean.lee
  * <p>
- * 纪录系统日志
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

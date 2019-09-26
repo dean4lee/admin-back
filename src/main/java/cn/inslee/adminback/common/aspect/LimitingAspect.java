@@ -14,9 +14,12 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * ip防刷api功能实现。
+ * 该功能使用redis作为存储，方便在集群中使用。
+ * 如果是单项目部署，可以将redis换成本地缓存。
+ *
  * @author dean.lee
  * <p>
- * ip防刷api
  */
 @Aspect
 @Component

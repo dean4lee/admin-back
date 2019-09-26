@@ -7,9 +7,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 防刷注解。
+ * 如果同一ip在cycle时间内访问api超过frequency次，
+ * 那么将在expireTime时间内无法再次访问，
+ * 如果再次访问，返回异常信息message
+ *
+ * 使用aop实现该功能
+ * @see cn.inslee.adminback.common.aspect.LimitingAspect
+ *
  * @author dean.lee
  * <p>
- * 限流注解
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
