@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.inslee.adminback.model.dao.sys.SysResMapper">
-    <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysRes">
+<mapper namespace="cn.inslee.admin.model.dao.sys.SysResMapper">
+    <resultMap id="BaseResultMap" type="cn.inslee.admin.model.domain.sys.SysRes">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
@@ -15,9 +15,6 @@
         <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
         <result column="modifier" property="modifier" jdbcType="BIGINT"/>
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
-    </resultMap>
-    <resultMap id="DTOResultMap" type="cn.inslee.adminback.model.dto.sys.SysResDTO" extends="BaseResultMap">
-
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -46,7 +43,7 @@
         GROUP BY res.id
     </select>
 
-    <select id="selectMenuByRoleIds" parameterType="list" resultMap="DTOResultMap">
+    <select id="selectMenuByRoleIds" parameterType="list" resultMap="BaseResultMap">
         SELECT
         <include refid="Associate_View_List"/>
         FROM
@@ -62,7 +59,7 @@
         GROUP BY res.id
     </select>
 
-    <update id="updateById" parameterType="cn.inslee.adminback.model.domain.sys.SysRes">
+    <update id="updateById" parameterType="cn.inslee.admin.model.domain.sys.SysRes">
       UPDATE sys_res
       SET `name` = #{name},
         url = #{url},

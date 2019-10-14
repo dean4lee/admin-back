@@ -1,17 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.inslee.adminback.model.dao.sys.SysDeptMapper" >
-  <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysDept" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="parent_id" property="parentId" jdbcType="BIGINT" />
-    <result column="del_flag" property="delFlag" jdbcType="BIT" />
-    <result column="creator" property="creator" jdbcType="BIGINT" />
-    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP" />
-    <result column="modifier" property="modifier" jdbcType="BIGINT" />
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+<mapper namespace="cn.inslee.admin.model.dao.sys.SysDeptMapper" >
+  <resultMap id="BaseResultMap" type="cn.inslee.admin.model.domain.sys.SysDept" >
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+    <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    <result column="seq" property="seq" jdbcType="INTEGER"/>
+    <result column="del_flag" property="delFlag" jdbcType="BIT"/>
+    <result column="creator" property="creator" jdbcType="BIGINT"/>
+    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+    <result column="modifier" property="modifier" jdbcType="BIGINT"/>
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, `name`, parent_id, del_flag, creator, creation_time, modifier, modify_time
+
+  <sql id="Base_Column_List">
+    id, `name`, parent_id, seq, remark, del_flag, creator, creation_time, modifier, modify_time
   </sql>
+  <sql id="View_List">
+        id, `name`, parent_id, seq, remark, creator, creation_time
+    </sql>
+
+  <select id="selectBySelective" parameterType="cn.inslee.admin.model.query.sys.DeptQuery" resultMap="BaseResultMap">
+    select
+    <include refid="View_List"/>
+    from
+    sys_dept
+    where
+    del_flag = false
+    <if test="keyword != null and keyword != ''">
+      and `name` like concat('%', #{keyword}, '%')
+    </if>
+  </select>
+
+  <update id="updateById" parameterType="cn.inslee.admin.model.domain.sys.SysDept">
+        update
+          sys_dept
+        set
+          `name` = #{name},
+          parent_id = #{parentId},
+          seq = #{seq},
+          remark = #{remark},
+          modifier = #{modifier},
+          modify_time = #{modifyTime}
+        where
+          id = #{id}
+    </update>
 </mapper>

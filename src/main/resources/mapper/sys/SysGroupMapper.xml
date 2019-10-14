@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.inslee.adminback.model.dao.sys.SysGroupMapper">
-    <resultMap id="BaseResultMap" type="cn.inslee.adminback.model.domain.sys.SysGroup">
+<mapper namespace="cn.inslee.admin.model.dao.sys.SysGroupMapper">
+    <resultMap id="BaseResultMap" type="cn.inslee.admin.model.domain.sys.SysGroup">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
@@ -12,8 +12,8 @@
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <resultMap id="DTOResultMap" type="cn.inslee.adminback.model.dto.sys.SysGroupDTO" extends="BaseResultMap">
-        <collection property="roles" ofType="cn.inslee.adminback.model.domain.sys.SysRole">
+    <resultMap id="DTOResultMap" type="cn.inslee.admin.model.dto.sys.SysGroupDTO" extends="BaseResultMap">
+        <collection property="roles" ofType="cn.inslee.admin.model.domain.sys.SysRole">
             <id column="role_id" property="id"/>
             <result column="role_name" property="name"/>
         </collection>
@@ -31,7 +31,7 @@
         `group`.id, `group`.`name`, `group`.remark
     </sql>
 
-    <select id="selectList" parameterType="cn.inslee.adminback.model.query.sys.GroupQuery" resultMap="DTOResultMap">
+    <select id="selectList" parameterType="cn.inslee.admin.model.query.sys.GroupQuery" resultMap="DTOResultMap">
       SELECT
         `group`.id, `group`.name, `group`.remark, role.id role_id, role.name role_name
       FROM
@@ -60,7 +60,7 @@
       ORDER BY `group`.id DESC
     </select>
 
-    <select id="countList" parameterType="cn.inslee.adminback.model.query.sys.GroupQuery" resultType="long">
+    <select id="countList" parameterType="cn.inslee.admin.model.query.sys.GroupQuery" resultType="long">
         SELECT
           COUNT(*)
         FROM
@@ -83,7 +83,7 @@
         ) a
     </select>
 
-    <update id="updateById" parameterType="cn.inslee.adminback.model.domain.sys.SysGroup">
+    <update id="updateById" parameterType="cn.inslee.admin.model.domain.sys.SysGroup">
         UPDATE
           sys_group
         SET

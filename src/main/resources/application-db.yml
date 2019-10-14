@@ -18,8 +18,12 @@ spring:
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=3000
       #配置WebStatFilter
       web-stat-filter:
+        enabled: true
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
         url-pattern: /*
+        session-stat-enable: true
+        profile-enable: true
+        principal-session-name: org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY
       #配置StatViewServlet
       stat-view-servlet:
         enabled: true
@@ -30,8 +34,8 @@ spring:
         #allow: 127.0.0.1
         #黑名单，优先级高于白名单
         #deny: 192.168.1.11
-        login-username: root
-        login-password: root
+        #login-username: root
+        #login-password: root
 
   redis:
     host: localhost
@@ -44,5 +48,5 @@ mybatis:
   mapper-locations: classpath:mapper/*/*.xml
 
 mapper:
-  mappers: cn.inslee.adminback.model.base.BaseMapper
+  mappers: cn.inslee.admin.model.base.BaseMapper
   identity: MYSQL
