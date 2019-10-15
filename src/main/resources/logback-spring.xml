@@ -11,7 +11,7 @@
     </appender>
 
     <appender name="err" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/logs/toilet/error.log</file>
+        <file>/logs/admin/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/logs/admin/error%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
