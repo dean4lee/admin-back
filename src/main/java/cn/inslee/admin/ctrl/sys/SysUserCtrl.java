@@ -4,6 +4,7 @@ import cn.inslee.admin.common.annotation.Limiting;
 import cn.inslee.admin.common.annotation.SystemLog;
 import cn.inslee.admin.common.result.JsonResult;
 import cn.inslee.admin.common.result.PageResult;
+import cn.inslee.admin.common.test.TestUtil;
 import cn.inslee.admin.common.util.Key;
 import cn.inslee.admin.common.util.RandomUtil;
 import cn.inslee.admin.model.domain.sys.SysUser;
@@ -110,6 +111,8 @@ public class SysUserCtrl {
     @PutMapping("/update")
     @RequiresPermissions("sys:user:update")
     public JsonResult update(@Validated @RequestBody UserUpdateFrom userFrom) {
+        //线上演示使用
+        TestUtil.isAdmin(userFrom.getId());
         //判断用户关联的角色和用户组，如果两者都没关联，返回错误
         Assert.isTrue((userFrom.getRoleIds() != null && !userFrom.getRoleIds().isEmpty()) ||
                 (userFrom.getGroupIds() != null && !userFrom.getGroupIds().isEmpty()), "角色和用户组必须选择");
@@ -141,6 +144,8 @@ public class SysUserCtrl {
     @DeleteMapping("/delete")
     @RequiresPermissions("sys:user:delete")
     public JsonResult delete(@NotNull(message = "用户id不能为空") Long id) {
+        //线上演示使用
+        TestUtil.isAdmin(id);
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser().setId(id)
                 .setDelFlag(true)
@@ -161,6 +166,8 @@ public class SysUserCtrl {
     @PutMapping("/status")
     @RequiresPermissions("sys:user:status")
     public JsonResult status(@Validated @RequestBody UserStatusFrom userFrom) {
+        //线上演示使用
+        TestUtil.isAdmin(userFrom.getId());
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser()
                 .setModifier(admin.getId())
@@ -179,6 +186,8 @@ public class SysUserCtrl {
     @PutMapping("updateSelf")
     public JsonResult updateSelf(@RequestBody @Validated UserUpdateSelfFrom userFrom) {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
+        //线上演示使用
+        TestUtil.isAdmin(admin.getId());
         SysUser user = new SysUser()
                 .setId(admin.getId())
                 .setModifier(admin.getId())
@@ -198,6 +207,8 @@ public class SysUserCtrl {
     @PutMapping("resetPwd")
     @RequiresPermissions("sys:user:update")
     public JsonResult resetPwd(@NotNull(message = "id不能为空") Long id) {
+        //线上演示使用
+        TestUtil.isAdmin(id);
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         //设置6位随机密码
         String password = RandomUtil.getRandom(6);

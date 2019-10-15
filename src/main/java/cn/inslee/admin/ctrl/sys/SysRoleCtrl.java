@@ -4,6 +4,7 @@ import cn.inslee.admin.common.annotation.Limiting;
 import cn.inslee.admin.common.annotation.SystemLog;
 import cn.inslee.admin.common.result.JsonResult;
 import cn.inslee.admin.common.result.PageResult;
+import cn.inslee.admin.common.test.TestUtil;
 import cn.inslee.admin.common.util.Key;
 import cn.inslee.admin.model.domain.sys.SysRole;
 import cn.inslee.admin.model.domain.sys.SysRoleRes;
@@ -104,6 +105,8 @@ public class SysRoleCtrl {
     @PutMapping("update")
     @Limiting
     public JsonResult update(@Validated @RequestBody RoleUpdateFrom roleFrom) {
+        //线上演示使用
+        TestUtil.isAdminRole(roleFrom.getId());
         //copy角色属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRole role = new SysRole()

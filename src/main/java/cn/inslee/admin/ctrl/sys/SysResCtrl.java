@@ -3,6 +3,7 @@ package cn.inslee.admin.ctrl.sys;
 import cn.inslee.admin.common.annotation.Limiting;
 import cn.inslee.admin.common.annotation.SystemLog;
 import cn.inslee.admin.common.result.JsonResult;
+import cn.inslee.admin.common.test.TestUtil;
 import cn.inslee.admin.common.util.Key;
 import cn.inslee.admin.model.domain.sys.SysRes;
 import cn.inslee.admin.model.domain.sys.SysRole;
@@ -143,6 +144,8 @@ public class SysResCtrl {
     @PutMapping("/update")
     @RequiresPermissions("sys:res:update")
     public JsonResult update(@Validated @RequestBody ResUpdateFrom resFrom) {
+        //线上演示使用
+        TestUtil.isAdminRes(resFrom.getId());
         //copy 资源属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRes res = new SysRes()
