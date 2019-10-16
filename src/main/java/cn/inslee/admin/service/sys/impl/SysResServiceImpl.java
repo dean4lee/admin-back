@@ -1,19 +1,20 @@
 package cn.inslee.admin.service.sys.impl;
 
-import cn.inslee.admin.common.constant.Constant;
+import cn.inslee.admin.common.constant.PermConstant;
 import cn.inslee.admin.model.dao.sys.SysResMapper;
 import cn.inslee.admin.model.domain.sys.SysRes;
 import cn.inslee.admin.service.sys.SysResService;
+import cn.inslee.admin.service.sys.SysRoleService;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.DigestUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,20 +25,22 @@ import java.util.Set;
 @Service
 public class SysResServiceImpl implements SysResService {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private SysRoleService roleService;
     @Autowired
     private SysResMapper resMapper;
 
     @Override
-    @Cacheable(value = Constant.PERM_KEY, key = "'res:' + #p0")
-    public Set<SysRes> selectByRoleIds(List<Long> roleIds) {
-        List<SysRes> ress = resMapper.selectByRoleIds(roleIds);
-        return new HashSet<>(ress);
+    @Cacheable(value = PermConstant.RES, key = PermConstant.CHAR_KEY + "+ #p0")
+    public Set<String> selectPremCharByUserId(Long uid) {
+        List<Long> roleIds = roleService.selectIdByUserId(uid);
+        List<String> permChars = resMapper.selectPermCharByRoleIds(roleIds);
+        return Sets.newHashSet(permChars);
     }
 
     @Override
-    @Cacheable(value = Constant.PERM_KEY, key = "'menu:' + #p0")
-    public List<SysRes> resources(List<Long> roleIds) {
+    @Cacheable(value = PermConstant.RES, key = PermConstant.MENU_KEY + "+ #p0")
+    public List<SysRes> resources(Long uid) {
+        List<Long> roleIds = roleService.selectIdByUserId(uid);
         List<SysRes> resList = resMapper.selectMenuByRoleIds(roleIds);
         return resList;
     }
@@ -76,7 +79,7 @@ public class SysResServiceImpl implements SysResService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = PermConstant.RES, allEntries = true)
     public String update(SysRes res) {
         SysRes example = new SysRes()
                 .setDelFlag(false)
@@ -91,7 +94,7 @@ public class SysResServiceImpl implements SysResService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = PermConstant.RES, allEntries = true)
     public String delete(SysRes res) {
         //判断当前删除的资源是否关联角色，关联角色则不能删除
         long roleTotal = resMapper.countRoleByResId(res.getId());
@@ -99,5 +102,9 @@ public class SysResServiceImpl implements SysResService {
 
         resMapper.updateByPrimaryKeySelective(res);
         return "资源删除成功";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DigestUtils.md5DigestAsHex("3uEgZce3f8f00a-2f79-4ffd-8a36-c680d53795c3".getBytes()));
     }
 }

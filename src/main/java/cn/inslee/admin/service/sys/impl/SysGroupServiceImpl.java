@@ -1,6 +1,6 @@
 package cn.inslee.admin.service.sys.impl;
 
-import cn.inslee.admin.common.constant.Constant;
+import cn.inslee.admin.common.constant.PermConstant;
 import cn.inslee.admin.model.dao.sys.SysGroupMapper;
 import cn.inslee.admin.model.dao.sys.SysGroupRoleMapper;
 import cn.inslee.admin.model.domain.sys.SysGroup;
@@ -11,7 +11,6 @@ import cn.inslee.admin.service.sys.SysGroupService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -24,8 +23,6 @@ import java.util.List;
  */
 @Service
 public class SysGroupServiceImpl implements SysGroupService {
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private SysGroupMapper groupMapper;
     @Autowired
@@ -70,7 +67,7 @@ public class SysGroupServiceImpl implements SysGroupService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
     public String update(SysGroup group, List<SysGroupRole> sysGroupRoleList) {
         //校验角色名称是否存在，不存在则修改
         SysGroup example = new SysGroup()
@@ -92,7 +89,7 @@ public class SysGroupServiceImpl implements SysGroupService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
     public String delete(SysGroup group) {
         //判断当前删除的角色是否关联用户，关联用户不能删除
         long userTotal = groupMapper.countUserByGroupId(group.getId());

@@ -1,12 +1,9 @@
 package cn.inslee.admin.shiro.realm;
 
-import cn.inslee.admin.model.domain.sys.SysRes;
-import cn.inslee.admin.model.domain.sys.SysRole;
 import cn.inslee.admin.model.domain.sys.SysUser;
 import cn.inslee.admin.service.sys.SysResService;
 import cn.inslee.admin.service.sys.SysRoleService;
 import cn.inslee.admin.service.sys.SysUserService;
-import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -22,10 +19,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,8 +32,6 @@ public class UserRealm extends AuthorizingRealm {
     private SysRoleService roleService;
     @Autowired
     private SysResService resService;
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 执行授权逻辑
@@ -54,17 +46,9 @@ public class UserRealm extends AuthorizingRealm {
         Subject subject = SecurityUtils.getSubject();
         SysUser user = (SysUser) subject.getPrincipal();
 
-        Set<String> roleChars = Sets.newHashSet();
-        List<Long> roleIds = new ArrayList<>();
-        Set<SysRole> roles = roleService.selectAllByUserId(user.getId());
-        roles.forEach(role -> {
-            roleChars.add(role.getRoleChar());
-            roleIds.add(role.getId());
-        });
+        Set<String> roleChars = roleService.selectRoleCharByUserId(user.getId());
 
-        Set<String> resChars = Sets.newHashSet();
-        Set<SysRes> ress = resService.selectByRoleIds(roleIds);
-        ress.forEach(res -> resChars.add(res.getPermChar()));
+        Set<String> resChars = resService.selectPremCharByUserId(user.getId());
 
         //将用户所拥有的的角色字符和权限字符添加到SimpleAuthorizationInfo中
         info.addRoles(roleChars);

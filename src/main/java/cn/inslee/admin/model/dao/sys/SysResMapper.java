@@ -11,7 +11,7 @@ public interface SysResMapper extends BaseMapper<SysRes> {
      * @param roleIds
      * @return
      */
-    List<SysRes> selectByRoleIds(List<Long> roleIds);
+    List<String> selectPermCharByRoleIds(List<Long> roleIds);
 
     /**
      * 根据角色id结合查询关联菜单资源
@@ -33,4 +33,6 @@ public interface SysResMapper extends BaseMapper<SysRes> {
      * @return
      */
     long countRoleByResId(Long resId);
+
+
 }

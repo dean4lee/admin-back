@@ -20,7 +20,21 @@ public interface SysRoleService {
      * @param uid
      * @return
      */
-    Set<SysRole> selectAllByUserId(Long uid);
+    Set<SysRole> selectByUserId(Long uid);
+
+    /**
+     * 根据用户id查询所有关联角色的id
+     * @param uid
+     * @return
+     */
+    List<Long> selectIdByUserId(Long uid);
+
+    /**
+     * 根据用户id查询所有关联角色的角色字符
+     * @param uid
+     * @return
+     */
+    Set<String> selectRoleCharByUserId(Long uid);
 
     /**
      * 查询所有的角色信息，只包含id和名称

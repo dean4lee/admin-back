@@ -11,19 +11,19 @@ import java.util.Set;
  */
 public interface SysResService {
     /**
-     * 根据角色id查询所有关联的资源
+     * 根据用户id查询所有关联的资源的权限字符
      *
-     * @param roleIds
+     * @param uid
      * @return
      */
-    Set<SysRes> selectByRoleIds(List<Long> roleIds);
+    Set<String> selectPremCharByUserId(Long uid);
 
     /**
-     * 根据角色id集合查询拥有的菜单列表
-     * @param roleIds
+     * 根据用户id查询拥有的菜单列表
+     * @param uid
      * @return
      */
-    List<SysRes> resources(List<Long> roleIds);
+    List<SysRes> resources(Long uid);
 
     /**
      * 查询资源列表

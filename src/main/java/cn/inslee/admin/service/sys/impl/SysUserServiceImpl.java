@@ -1,6 +1,6 @@
 package cn.inslee.admin.service.sys.impl;
 
-import cn.inslee.admin.common.constant.Constant;
+import cn.inslee.admin.common.constant.PermConstant;
 import cn.inslee.admin.model.dao.sys.SysUserGroupMapper;
 import cn.inslee.admin.model.dao.sys.SysUserMapper;
 import cn.inslee.admin.model.dao.sys.SysUserRoleMapper;
@@ -16,7 +16,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.env.Environment;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,6 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserRoleMapper userRoleMapper;
     @Autowired
     private SysUserGroupMapper userGroupMapper;
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private ThreadPoolExecutor threadPool;
     @Autowired
@@ -110,7 +107,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
     public String update(SysUser user, List<SysUserRole> sysUserRoleList, List<SysUserGroup> sysUserGroupList) {
         SysUser example = new SysUser()
                 .setId(user.getId())
@@ -144,7 +141,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
     public String delete(SysUser user) {
         userMapper.updateByPrimaryKeySelective(user);
         return "用户删除成功";
@@ -152,7 +149,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = Constant.PERM_KEY, allEntries = true)
+    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
     public String status(SysUser user) {
         userMapper.updateByPrimaryKeySelective(user);
         return "用户状态修改成功";

@@ -6,20 +6,16 @@ import cn.inslee.admin.common.result.JsonResult;
 import cn.inslee.admin.common.test.TestUtil;
 import cn.inslee.admin.common.util.Key;
 import cn.inslee.admin.model.domain.sys.SysRes;
-import cn.inslee.admin.model.domain.sys.SysRole;
 import cn.inslee.admin.model.domain.sys.SysUser;
 import cn.inslee.admin.model.from.sys.ResAddFrom;
 import cn.inslee.admin.model.from.sys.ResUpdateFrom;
 import cn.inslee.admin.service.sys.SysResService;
 import cn.inslee.admin.service.sys.SysRoleService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +39,6 @@ import java.util.Set;
 public class SysResCtrl {
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    @Autowired
     private SysResService resService;
     @Autowired
     private SysRoleService roleService;
@@ -58,12 +52,8 @@ public class SysResCtrl {
     @Limiting
     @GetMapping("/resources")
     public JsonResult resources() {
-        //先从缓存中获取菜单列表
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
-        Set<SysRole> sysRoles = roleService.selectAllByUserId(admin.getId());
-        List<Long> roleIds = Lists.newArrayList();
-        sysRoles.forEach(role -> roleIds.add(role.getId()));
-        List<SysRes> result = resService.resources(roleIds);
+        List<SysRes> result = resService.resources(admin.getId());
         return JsonResult.success(result);
     }
 
@@ -77,12 +67,7 @@ public class SysResCtrl {
     public JsonResult getPerms() {
         //获取缓存中的权限字符
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
-        Set<SysRole> sysRoles = roleService.selectAllByUserId(admin.getId());
-        List<Long> roleIds = Lists.newArrayList();
-        sysRoles.forEach(role -> roleIds.add(role.getId()));
-        Set<SysRes> sysRes = resService.selectByRoleIds(roleIds);
-        Set<String> resChars = Sets.newHashSet();
-        sysRes.forEach(res -> resChars.add(res.getPermChar()));
+        Set<String> resChars = resService.selectPremCharByUserId(admin.getId());
         return JsonResult.success(resChars);
     }
 

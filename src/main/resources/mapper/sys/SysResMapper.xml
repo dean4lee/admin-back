@@ -25,9 +25,9 @@
     res.id, res.`name`, res.`type`, res.url, res.parent_id, res.perm_char, res.icon, res.seq
     </sql>
 
-    <select id="selectByRoleIds" parameterType="list" resultMap="BaseResultMap">
+    <select id="selectPermCharByRoleIds" parameterType="list" resultType="string">
         SELECT
-        <include refid="Associate_View_List"/>
+        res.perm_char
         FROM
         sys_res res,
         sys_role_res rr
