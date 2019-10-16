@@ -177,7 +177,7 @@ public class SysUserServiceImpl implements SysUserService {
     public String resetPwd(SysUser user) {
         SysUser sysUser = userMapper.selectByPrimaryKey(user.getId());
         String password = user.getPassword();
-        user.setPassword(DigestUtils.md5DigestAsHex((password + user.getSalt()).getBytes()));
+        user.setPassword(DigestUtils.md5DigestAsHex((password + sysUser.getSalt()).getBytes()));
         userMapper.updateByPrimaryKeySelective(user);
 
         //获取用户邮箱发送重置密码邮件
