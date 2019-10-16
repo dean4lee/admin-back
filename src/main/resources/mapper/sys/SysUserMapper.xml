@@ -56,10 +56,13 @@
         <include refid="Associate_View_List"/>, dept.name dept_name
         FROM
         sys_dept dept,
-        sys_user `user` LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
-        LEFT JOIN sys_role role ON role.id = ur.role_id
+        sys_user `user`
+        <if test="roleId != null">
+        LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
+        </if>
+        <if test="groupId != null">
         LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
-        LEFT JOIN sys_group `group` ON `group`.id = ug.group_id
+        </if>
         WHERE
         `user`.del_flag = 0
         AND `user`.dept_id = dept.id
@@ -67,10 +70,10 @@
             AND dept.id = #{deptId}
         </if>
         <if test="roleId != null">
-            AND role.id = #{roleId}
+            AND ur.role_id = #{roleId}
         </if>
         <if test="groupId != null">
-            AND `group`.id = #{groupId}
+            AND ug.group_id = #{groupId}
         </if>
         <if test="keyword != null">
             AND `user`.username LIKE CONCAT('%', #{keyword}, '%')
@@ -83,7 +86,8 @@
         <if test="pageSize > 0">
             LIMIT #{pageNum}, #{pageSize}
         </if>
-        ) `user` LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
+        ) `user`
+        LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
         LEFT JOIN sys_role role ON role.id = ur.role_id
         LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
         LEFT JOIN sys_group `group` ON `group`.id = ug.group_id
@@ -97,18 +101,24 @@
         <include refid="Associate_View_List"/>
         FROM
         sys_dept dept,
-        sys_user `user` LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
-        LEFT JOIN sys_role role ON role.id = ur.role_id
-        LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
-        LEFT JOIN sys_group `group` ON `group`.id = ug.group_id
+        sys_user `user`
+        <if test="roleId != null">
+            LEFT JOIN sys_user_role ur ON `user`.id = ur.user_id
+        </if>
+        <if test="groupId != null">
+            LEFT JOIN sys_user_group ug ON `user`.id = ug.user_id
+        </if>
         WHERE
         `user`.del_flag = 0
         AND `user`.dept_id = dept.id
+        <if test="deptId != null">
+            AND dept.id = #{deptId}
+        </if>
         <if test="roleId != null">
-            AND role.id = #{roleId}
+            AND ur.role_id = #{roleId}
         </if>
         <if test="groupId != null">
-            AND `group`.id = #{groupId}
+            AND ug.group_id = #{groupId}
         </if>
         <if test="keyword != null">
             AND `user`.username LIKE CONCAT('%', #{keyword}, '%')
