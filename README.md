@@ -5,7 +5,7 @@ springboot2 + shiro实现rbac权限管理系统接口
 > 后端：springboot + shiro + redis + mybatis\
 > 前端：vue + element-ui
 > 
-> 项目使用redis作为缓存, 单机版需要修改一些使用redis的地方. \
+> 项目使用redis作为缓存, 不使用只需要将依赖删除. \
 > session使用redis-session, 方便集群. 不使用只需要将依赖删除即可
 
 [线上演示地址](https://admin.inslee.cn) 账号:admin, 密码:123456\
