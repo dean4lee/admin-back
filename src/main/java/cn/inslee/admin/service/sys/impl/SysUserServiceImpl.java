@@ -91,17 +91,17 @@ public class SysUserServiceImpl implements SysUserService {
         }
 
         //发送邮件通知用户
-        threadPool.execute(() -> {
-            String content = "用户名：" + user.getUsername() + "\n" +
-                    "密码：" + password;
+//        threadPool.execute(() -> {
+        String content = "用户名：" + user.getUsername() + "\n" +
+                "密码：" + password;
 
-            SimpleMailMessage mailMsg = new SimpleMailMessage();
-            mailMsg.setFrom(env.getProperty("spring.mail.username"));
-            mailMsg.setTo(user.getEmail());
-            mailMsg.setSubject(env.getProperty("mail-subject.register"));
-            mailMsg.setText(content);
-            mailSender.send(mailMsg);
-        });
+        SimpleMailMessage mailMsg = new SimpleMailMessage();
+        mailMsg.setFrom(env.getProperty("spring.mail.username"));
+        mailMsg.setTo(user.getEmail());
+        mailMsg.setSubject(env.getProperty("mail-subject.register"));
+        mailMsg.setText(content);
+        mailSender.send(mailMsg);
+//        });
         return "用户添加成功";
     }
 
@@ -181,17 +181,17 @@ public class SysUserServiceImpl implements SysUserService {
         userMapper.updateByPrimaryKeySelective(user);
 
         //获取用户邮箱发送重置密码邮件
-        threadPool.execute(() -> {
-            String content = "用户名：" + sysUser.getUsername() + "\n" +
-                    "密码：" + password;
+//        threadPool.execute(() -> {
+        String content = "用户名：" + sysUser.getUsername() + "\n" +
+                "密码：" + password;
 
-            SimpleMailMessage mailMsg = new SimpleMailMessage();
-            mailMsg.setFrom(env.getProperty("spring.mail.username"));
-            mailMsg.setTo(sysUser.getEmail());
-            mailMsg.setSubject(env.getProperty("mail-subject.resetPwd"));
-            mailMsg.setText(content);
-            mailSender.send(mailMsg);
-        });
+        SimpleMailMessage mailMsg = new SimpleMailMessage();
+        mailMsg.setFrom(env.getProperty("spring.mail.username"));
+        mailMsg.setTo(sysUser.getEmail());
+        mailMsg.setSubject(env.getProperty("mail-subject.resetPwd"));
+        mailMsg.setText(content);
+        mailSender.send(mailMsg);
+//        });
 
         return "重置密码成功";
     }
