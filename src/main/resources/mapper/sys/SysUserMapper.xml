@@ -149,9 +149,6 @@
     <update id="updateBySelf" parameterType="cn.inslee.admin.model.domain.sys.SysUser">
         UPDATE sys_user
         SET
-        <if test="password != null">
-            password = #{password},
-        </if>
         nickname = #{nickname},
         phone = #{phone},
         email = #{email},

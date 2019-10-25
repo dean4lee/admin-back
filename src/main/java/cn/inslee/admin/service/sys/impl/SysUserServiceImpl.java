@@ -158,18 +158,8 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public String updateSelf(SysUser user) {
-        if (user.getPassword() != null) {
-            SysUser sysUser = userMapper.selectByPrimaryKey(user.getId());
-            String password = user.getPassword() + sysUser.getSalt();
-            user.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
-        }
         userMapper.updateBySelf(user);
 
-        // 如果修改密码则强制退出
-        if (user.getPassword() != null) {
-            Subject subject = SecurityUtils.getSubject();
-            subject.logout();
-        }
         return "修改成功";
     }
 

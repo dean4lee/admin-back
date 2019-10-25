@@ -186,8 +186,6 @@ public class SysUserCtrl {
     @PutMapping("updateSelf")
     public JsonResult updateSelf(@RequestBody @Validated UserUpdateSelfFrom userFrom) {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
-        //线上演示使用
-        TestUtil.isAdmin(admin.getId());
         SysUser user = new SysUser()
                 .setId(admin.getId())
                 .setModifier(admin.getId())

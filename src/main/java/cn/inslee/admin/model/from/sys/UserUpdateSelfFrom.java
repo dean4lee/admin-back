@@ -14,9 +14,6 @@ import javax.validation.constraints.Pattern;
 @Data
 public class UserUpdateSelfFrom {
 
-    @Length(min = 6, max = 16, message = "非法的密码")
-    private String password;
-
     @Length(min = 1, max = 12, message = "非法的昵称")
     private String nickname;
 
