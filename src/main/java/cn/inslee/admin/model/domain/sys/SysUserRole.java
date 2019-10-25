@@ -15,7 +15,7 @@ public class SysUserRole implements Serializable {
 
     private static final long serialVersionUID = 20102593654967106L;
 
-    private Long userId;
+    private Long uid;
 
     private Long roleId;
 }

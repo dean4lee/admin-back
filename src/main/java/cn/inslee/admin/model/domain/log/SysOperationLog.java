@@ -16,7 +16,7 @@ public class SysOperationLog implements Serializable {
     @Id
     private Long id;
 
-    private Long userId;
+    private Long uid;
 
     private String username;
 
@@ -28,7 +28,7 @@ public class SysOperationLog implements Serializable {
 
     private String value;
 
-    private Date createTime;
+    private Long creationTime;
 
     private Boolean status;
 

@@ -103,8 +103,4 @@ public class SysResServiceImpl implements SysResService {
         resMapper.updateByPrimaryKeySelective(res);
         return "资源删除成功";
     }
-
-    public static void main(String[] args) {
-        System.out.println(DigestUtils.md5DigestAsHex("3uEgZce3f8f00a-2f79-4ffd-8a36-c680d53795c3".getBytes()));
-    }
 }

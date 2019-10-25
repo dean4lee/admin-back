@@ -7,11 +7,11 @@
     <result column="os_name" property="osName" jdbcType="VARCHAR" />
     <result column="device_type" property="deviceType" jdbcType="VARCHAR" />
     <result column="ip" property="ip" jdbcType="VARCHAR" />
-    <result column="login_time" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="login_time" property="loginTime" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="BIT" />
     <result column="msg" property="msg" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, os_name, device_type, ip, login_time, status, msg
+    id, username, os_name, device_type, ip, login_time, status, msg
   </sql>
 </mapper>

@@ -87,7 +87,7 @@ public class SysGroupCtrl {
         SysGroup group = new SysGroup()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
-                .setCreationTime(new Date());
+                .setCreationTime(System.currentTimeMillis());
         BeanUtils.copyProperties(groupFrom, group);
 
         //copy关联的角色信息
@@ -109,7 +109,7 @@ public class SysGroupCtrl {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysGroup group = new SysGroup()
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(groupFrom, group);
 
         //copy关联角色的属性
@@ -133,7 +133,7 @@ public class SysGroupCtrl {
                 .setId(id)
                 .setDelFlag(true)
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
 
         return JsonResult.success(groupService.delete(group));
     }

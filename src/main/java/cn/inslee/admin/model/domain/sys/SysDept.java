@@ -18,7 +18,7 @@ public class SysDept implements Serializable {
 
     private String name;
 
-    private Long parentId;
+    private Long pid;
 
     private Integer seq;
 
@@ -28,10 +28,10 @@ public class SysDept implements Serializable {
 
     private Long creator;
 
-    private Date creationTime;
+    private Long creationTime;
 
     private Long modifier;
 
-    private Date modifyTime;
+    private Long modifyTime;
 
 }

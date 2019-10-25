@@ -112,7 +112,7 @@ public class SysResCtrl {
         SysRes res = new SysRes()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
-                .setCreationTime(new Date());
+                .setCreationTime(System.currentTimeMillis());
         BeanUtils.copyProperties(resFrom, res);
 
         return JsonResult.success(resService.add(res));
@@ -135,7 +135,7 @@ public class SysResCtrl {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRes res = new SysRes()
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(resFrom, res);
 
         return JsonResult.success(resService.update(res));
@@ -157,7 +157,7 @@ public class SysResCtrl {
                 .setId(id)
                 .setDelFlag(true)
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
 
         return JsonResult.success(resService.delete(res));
     }

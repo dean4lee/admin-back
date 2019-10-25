@@ -7,9 +7,9 @@
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="del_flag" property="delFlag" jdbcType="BIT"/>
         <result column="creator" property="creator" jdbcType="BIGINT"/>
-        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="creation_time" property="creationTime" jdbcType="BIGINT"/>
         <result column="modifier" property="modifier" jdbcType="BIGINT"/>
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="BIGINT"/>
     </resultMap>
 
     <resultMap id="DTOResultMap" type="cn.inslee.admin.model.dto.sys.SysGroupDTO" extends="BaseResultMap">
@@ -103,7 +103,7 @@
 	    sys_user `user`
       WHERE
 	    `user`.del_flag = FALSE
-	  AND ug.user_id = `user`.id
+	  AND ug.uid = `user`.id
 	  AND ug.group_id = #{groupId}
     </select>
 </mapper>

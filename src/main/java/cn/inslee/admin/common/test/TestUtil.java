@@ -5,7 +5,7 @@ package cn.inslee.admin.common.test;
  * <p>
  */
 public class TestUtil {
-    public static Long[] resIds = {
+    private static Long[] resIds = {
             1568792652982000L,
             1568792740183000L,
             1568792818721000L,

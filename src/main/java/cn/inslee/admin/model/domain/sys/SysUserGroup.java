@@ -15,7 +15,7 @@ public class SysUserGroup implements Serializable {
 
     private static final long serialVersionUID = -8994349029192313827L;
 
-    private Long userId;
+    private Long uid;
 
     private Long groupId;
 }

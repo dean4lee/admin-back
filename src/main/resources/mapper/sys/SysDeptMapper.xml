@@ -4,21 +4,21 @@
   <resultMap id="BaseResultMap" type="cn.inslee.admin.model.domain.sys.SysDept" >
     <id column="id" property="id" jdbcType="BIGINT"/>
     <result column="name" property="name" jdbcType="VARCHAR"/>
-    <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+    <result column="pid" property="pid" jdbcType="BIGINT"/>
     <result column="remark" property="remark" jdbcType="VARCHAR"/>
     <result column="seq" property="seq" jdbcType="INTEGER"/>
     <result column="del_flag" property="delFlag" jdbcType="BIT"/>
     <result column="creator" property="creator" jdbcType="BIGINT"/>
-    <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+    <result column="creation_time" property="creationTime" jdbcType="BIGINT"/>
     <result column="modifier" property="modifier" jdbcType="BIGINT"/>
-    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    <result column="modify_time" property="modifyTime" jdbcType="BIGINT"/>
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, `name`, parent_id, seq, remark, del_flag, creator, creation_time, modifier, modify_time
+    id, `name`, pid, seq, remark, del_flag, creator, creation_time, modifier, modify_time
   </sql>
   <sql id="View_List">
-        id, `name`, parent_id, seq, remark, creator, creation_time
+        id, `name`, pid, seq, remark, creator, creation_time
     </sql>
 
   <select id="selectBySelective" parameterType="cn.inslee.admin.model.query.sys.DeptQuery" resultMap="BaseResultMap">
@@ -38,7 +38,7 @@
           sys_dept
         set
           `name` = #{name},
-          parent_id = #{parentId},
+          pid = #{pid},
           seq = #{seq},
           remark = #{remark},
           modifier = #{modifier},

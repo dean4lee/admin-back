@@ -47,11 +47,11 @@ public class LimitingAspect {
         long currentTime = System.currentTimeMillis();
 
         //获取redis中周期内第一次访问方法的时间和执行的次数
-        Long beginTime = (Long) redisTemplate.opsForHash().get(String.format(LIMITING_KEY, ipAddress, methodName), LIMITING_BEGINTIME);
-        Integer exFrequency = (Integer) redisTemplate.opsForHash().get(String.format(LIMITING_KEY, ipAddress, methodName), LIMITING_EXFREQUENCY);
+        Long beginTimeLong = (Long) redisTemplate.opsForHash().get(String.format(LIMITING_KEY, ipAddress, methodName), LIMITING_BEGINTIME);
+        Integer exFrequencyLong = (Integer) redisTemplate.opsForHash().get(String.format(LIMITING_KEY, ipAddress, methodName), LIMITING_EXFREQUENCY);
 
-        beginTime = beginTime == null ? 0L : beginTime;
-        exFrequency = exFrequency == null ? 0 : exFrequency;
+        long beginTime = beginTimeLong == null ? 0L : beginTimeLong;
+        int exFrequency = exFrequencyLong == null ? 0 : exFrequencyLong;
 
         //如果当前时间减去周期内第一次访问方法的时间大于周期时间，则正常访问
         //并将周期内第一次访问方法的时间和执行次数初始化

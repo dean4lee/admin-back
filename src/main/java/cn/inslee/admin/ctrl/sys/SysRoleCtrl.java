@@ -91,7 +91,7 @@ public class SysRoleCtrl {
         SysRole role = new SysRole()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
-                .setCreationTime(new Date());
+                .setCreationTime(System.currentTimeMillis());
         BeanUtils.copyProperties(roleFrom, role);
 
         //copy角色关联的资源
@@ -111,7 +111,7 @@ public class SysRoleCtrl {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRole role = new SysRole()
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(roleFrom, role);
 
         //copy角色关联资源的属性
@@ -135,7 +135,7 @@ public class SysRoleCtrl {
                 .setId(id)
                 .setDelFlag(true)
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
 
         return JsonResult.success(roleService.delete(role));
     }

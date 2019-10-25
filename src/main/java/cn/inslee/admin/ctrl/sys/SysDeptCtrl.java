@@ -68,7 +68,7 @@ public class SysDeptCtrl {
         SysDept dept = new SysDept()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
-                .setCreationTime(new Date());
+                .setCreationTime(System.currentTimeMillis());
         BeanUtils.copyProperties(deptFrom, dept);
 
         return JsonResult.success(deptService.add(dept));
@@ -84,7 +84,7 @@ public class SysDeptCtrl {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysDept dept = new SysDept()
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(deptFrom, dept);
 
         return JsonResult.success(deptService.update(dept));
@@ -101,7 +101,7 @@ public class SysDeptCtrl {
                 .setId(id)
                 .setDelFlag(true)
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
 
         return JsonResult.success(deptService.delete(dept));
     }

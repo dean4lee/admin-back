@@ -26,7 +26,7 @@ public class SysRes implements Serializable {
 
     private String url;
 
-    private Long parentId;
+    private Long pid;
 
     private String permChar;
 
@@ -38,9 +38,9 @@ public class SysRes implements Serializable {
 
     private Long creator;
 
-    private Date creationTime;
+    private Long creationTime;
 
     private Long modifier;
 
-    private Date modifyTime;
+    private Long modifyTime;
 }

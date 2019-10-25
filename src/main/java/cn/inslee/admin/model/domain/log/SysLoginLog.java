@@ -24,7 +24,7 @@ public class SysLoginLog implements Serializable {
 
     private String ip;
 
-    private Date loginTime;
+    private Long loginTime;
 
     private Boolean status;
 

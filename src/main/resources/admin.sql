@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 111
+ Source Server         : 106
  Source Server Type    : MySQL
  Source Server Version : 50725
  Source Host           : 106.14.186.54:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50725
  File Encoding         : 65001
 
- Date: 14/10/2019 11:02:06
+ Date: 25/10/2019 14:33:09
 */
 
 SET NAMES utf8mb4;
@@ -24,24 +24,24 @@ DROP TABLE IF EXISTS `sys_dept`;
 CREATE TABLE `sys_dept`  (
   `id` bigint(20) NOT NULL,
   `name` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '部门名称',
-  `parent_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '父级id（0-根部门）',
+  `pid` bigint(20) NOT NULL DEFAULT 0 COMMENT '父级id（0-根部门）',
   `seq` int(5) NOT NULL DEFAULT 0 COMMENT '排序',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `del_flag` bit(1) NOT NULL DEFAULT b'0' COMMENT '删除状态（0-正常，1-删除）',
   `creator` bigint(20) NOT NULL COMMENT '创建人',
-  `creation_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creation_time` bigint(13) NOT NULL COMMENT '创建时间',
   `modifier` bigint(20) NULL DEFAULT NULL COMMENT '修改时间',
-  `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `modify_time` bigint(13) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '部门' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (1569659656619000, '第一层', 0, 0, NULL, b'0', 1, '2019-09-28 16:34:30', 1, '2019-10-14 11:01:14');
-INSERT INTO `sys_dept` VALUES (1569661157895000, 'test', 1569659656619000, 1, NULL, b'0', 1, '2019-09-28 16:59:33', NULL, NULL);
-INSERT INTO `sys_dept` VALUES (1569729083883000, '开发部', 1569659656619000, 0, '', b'0', 1, '2019-09-29 11:51:24', 1, '2019-09-29 15:16:36');
-INSERT INTO `sys_dept` VALUES (1569737846413000, '123', 1569661157895000, 0, NULL, b'0', 1, '2019-09-29 14:17:26', 1, '2019-09-29 17:29:20');
+INSERT INTO `sys_dept` VALUES (1569659656619000, '第一层', 0, 0, NULL, b'0', 1, 1569659670000, 1, 1571022074000);
+INSERT INTO `sys_dept` VALUES (1569661157895000, 'test', 1569659656619000, 1, NULL, b'0', 1, 1569661173000, NULL, NULL);
+INSERT INTO `sys_dept` VALUES (1569729083883000, '开发部', 1569659656619000, 0, '', b'0', 1, 1569729084000, 1, 1569741396000);
+INSERT INTO `sys_dept` VALUES (1569737846413000, '123', 1569661157895000, 0, NULL, b'0', 1, 1569737846000, 1, 1569749360000);
 
 -- ----------------------------
 -- Table structure for sys_group
@@ -53,16 +53,16 @@ CREATE TABLE `sys_group`  (
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `del_flag` bit(1) NOT NULL DEFAULT b'0' COMMENT '删除状态（0-正常，1-删除）',
   `creator` bigint(20) NOT NULL COMMENT '创建人',
-  `creation_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creation_time` bigint(13) NOT NULL COMMENT '创建时间',
   `modifier` bigint(20) NULL DEFAULT NULL COMMENT '修改时间',
-  `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `modify_time` bigint(13) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户组' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_group
 -- ----------------------------
-INSERT INTO `sys_group` VALUES (1569468327468001, '测试用户组', NULL, b'0', 1, '2019-09-26 11:25:27', NULL, NULL);
+INSERT INTO `sys_group` VALUES (1569468327468001, '测试用户组', NULL, b'0', 1, 1569468327000, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_group_role
@@ -89,7 +89,7 @@ CREATE TABLE `sys_login_log`  (
   `os_name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备型号',
   `device_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '设备类型',
   `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '登陆的ip',
-  `login_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登陆时间',
+  `login_time` bigint(13) NOT NULL COMMENT '登陆时间',
   `status` bit(1) NOT NULL DEFAULT b'0' COMMENT '登陆状态（0-失败，1-成功）',
   `msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '登陆失败的原因',
   PRIMARY KEY (`id`) USING BTREE
@@ -98,18 +98,64 @@ CREATE TABLE `sys_login_log`  (
 -- ----------------------------
 -- Records of sys_login_log
 -- ----------------------------
-INSERT INTO `sys_login_log` VALUES (1569400094157000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', '2019-09-25 16:28:14', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1569402650177000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', '2019-09-25 17:10:50', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1569467493307000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', '2019-09-26 11:11:33', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1569468176712000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', '2019-09-26 11:22:57', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1569468709348000, 'test', 'Windows 10', 'Computer', '123.235.65.206', '2019-09-26 11:31:49', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1569485620675000, 'admin', 'Windows 10', 'Computer', '221.7.196.97', '2019-09-26 16:13:41', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1569745213434000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', '2019-09-29 16:20:13', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1570106250861000, 'admin', 'Mac OS X (iPhone)', 'Mobile', '112.224.71.180', '2019-10-03 20:37:31', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1570589853455000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', '2019-10-09 10:57:33', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1570837693685000, 'admin', 'Windows 10', 'Computer', '111.43.19.6', '2019-10-12 07:48:14', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1571018515859000, 'admin', 'iOS 11 (iPhone)', 'Mobile', '127.0.0.1', '2019-10-14 10:01:56', b'1', NULL);
-INSERT INTO `sys_login_log` VALUES (1571018589852000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', '2019-10-14 10:03:10', b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569400094157000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1569400094000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569402650177000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1569402650000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569467493307000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1569467493000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569468176712000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1569468177000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569468709348000, 'test', 'Windows 10', 'Computer', '123.235.65.206', 1569468709000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569485620675000, 'admin', 'Windows 10', 'Computer', '221.7.196.97', 1569485621000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1569745213434000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1569745213000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1570106250861000, 'admin', 'Mac OS X (iPhone)', 'Mobile', '112.224.71.180', 1570106251000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1570589853455000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1570589853000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1570837693685000, 'admin', 'Windows 10', 'Computer', '111.43.19.6', 1570837694000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571018515859000, 'admin', 'iOS 11 (iPhone)', 'Mobile', '127.0.0.1', 1571018516000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571018589852000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571018590000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571035263145000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571035263000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571040133419000, 'admin', 'Unknown', 'Unknown', '127.0.0.1', 1571040133000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571100404165000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571100404000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571106162628000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571106163000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571107525494000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571107526000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571108241235000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571108241000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571121332842000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571121333000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571128644192000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571128644000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571128847474000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571128847000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571129844469000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571129844000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571130072425000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571130072000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571130897927000, 'admin', 'Mac OS X', 'Computer', '122.224.137.178', 1571130898000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571130901018000, 'admin', 'Android Mobile', 'Mobile', '223.104.2.9', 1571130901000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571130923984000, 'admin', 'Windows 10', 'Computer', '117.132.8.78', 1571130924000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571130970553000, 'admin', 'Windows 10', 'Computer', '27.223.78.167', 1571130971000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571131226246000, 'admin', 'Windows 10', 'Computer', '219.147.2.35', 1571131226000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571131777657000, 'admin', 'Windows 10', 'Computer', '61.162.60.198', 1571131778000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571132194606000, 'admin', 'Android Mobile', 'Mobile', '223.104.190.141', 1571132195000, b'0', '密码错误');
+INSERT INTO `sys_login_log` VALUES (1571132217884000, 'admin', 'Android Mobile', 'Mobile', '223.104.190.141', 1571132218000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571188077626000, 'admin', 'Windows 10', 'Computer', '61.232.49.66', 1571188078000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571207949610000, 'admin', 'Mac OS X (iPhone)', 'Mobile', '124.64.18.139', 1571207950000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571210648561000, 'admin', 'Android Mobile', 'Mobile', '123.234.111.77', 1571210649000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571210936572000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571210937000, b'0', '验证码错误');
+INSERT INTO `sys_login_log` VALUES (1571210942522000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571210943000, b'0', '验证码错误');
+INSERT INTO `sys_login_log` VALUES (1571210945725000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571210946000, b'0', '密码错误');
+INSERT INTO `sys_login_log` VALUES (1571210963590000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571210964000, b'0', '密码错误');
+INSERT INTO `sys_login_log` VALUES (1571210974635000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571210975000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571211032411000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571211032000, b'0', '密码错误');
+INSERT INTO `sys_login_log` VALUES (1571211081241000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571211081000, b'0', '密码错误');
+INSERT INTO `sys_login_log` VALUES (1571211312120000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571211312000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571211360867000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571211361000, b'0', '验证码错误');
+INSERT INTO `sys_login_log` VALUES (1571211364745000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571211365000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571211397666000, 'test', 'Windows 10', 'Computer', '127.0.0.1', 1571211398000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571211405885000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571211406000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571211473630000, 'test22', 'Windows 10', 'Computer', '127.0.0.1', 1571211474000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571211492991000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571211493000, b'0', '验证码错误');
+INSERT INTO `sys_login_log` VALUES (1571211496164000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571211496000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571565794543000, 'admin', 'Windows 10', 'Computer', '120.87.183.205', 1571565795000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571633755854000, 'admin', 'Windows 7', 'Computer', '113.16.66.137', 1571633756000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571642440841000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571642441000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571644815191000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571644815000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571799823612000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571799824000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571801344174000, 'admin', 'Windows 10', 'Computer', '123.235.65.206', 1571801344000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571940825967000, 'admin', 'Linux', 'Computer', '112.96.134.222', 1571940826000, b'1', NULL);
+INSERT INTO `sys_login_log` VALUES (1571975953695000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571975953695, b'0', '验证码错误');
+INSERT INTO `sys_login_log` VALUES (1571975958265000, 'admin', 'Windows 10', 'Computer', '127.0.0.1', 1571975958265, b'1', NULL);
 
 -- ----------------------------
 -- Table structure for sys_operation_log
@@ -117,7 +163,7 @@ INSERT INTO `sys_login_log` VALUES (1571018589852000, 'admin', 'Windows 10', 'Co
 DROP TABLE IF EXISTS `sys_operation_log`;
 CREATE TABLE `sys_operation_log`  (
   `id` bigint(16) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `uid` bigint(20) NOT NULL COMMENT '用户id',
   `username` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户名',
   `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户ip',
   `url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '请求URL',
@@ -127,40 +173,81 @@ CREATE TABLE `sys_operation_log`  (
   `result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '执行成功后的返回信息',
   `value` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '描述',
   `exception` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '执行失败后的异常信息',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `creation_time` bigint(13) NOT NULL COMMENT '创建时间',
   `status` bit(1) NOT NULL COMMENT '执行状态，0-失败，1-成功',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1571022073954001 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统操作日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1571984438229001 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统操作日志表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_operation_log
 -- ----------------------------
-INSERT INTO `sys_operation_log` VALUES (1569402657527000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.status', 177, '{\"id\":1,\"status\":true}', NULL, '用户状态修改', '测试项目，无法修改admin用户', '2019-09-25 17:10:58', b'0');
-INSERT INTO `sys_operation_log` VALUES (1569402670282000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/delete', 'cn.inslee.adminback.ctrl.sys.SysRoleCtrl.delete', 3, '1568772939750000', NULL, '角色删除', '测试项目，无法修改admin角色', '2019-09-25 17:11:10', b'0');
-INSERT INTO `sys_operation_log` VALUES (1569403466116000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/res/delete', 'cn.inslee.adminback.ctrl.sys.SysResCtrl.delete', 79, '1568793417548000', NULL, '资源删除', '测试项目，无法修改admin角色关联的资源', '2019-09-25 17:24:26', b'0');
-INSERT INTO `sys_operation_log` VALUES (1569403471414000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/res/update', 'cn.inslee.adminback.ctrl.sys.SysResCtrl.update', 123, '{\"id\":1568793473396000,\"name\":\"日志管理\",\"parentId\":0,\"permChar\":\"log:page\",\"seq\":1,\"url\":\"/log\"}', NULL, '资源修改', '测试项目，无法修改admin角色关联的资源', '2019-09-25 17:24:31', b'0');
-INSERT INTO `sys_operation_log` VALUES (1569403477457000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/delete', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.delete', 3, '1', NULL, '用户删除', '测试项目，无法修改admin用户', '2019-09-25 17:24:37', b'0');
-INSERT INTO `sys_operation_log` VALUES (1569468302284000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/add', 'cn.inslee.adminback.ctrl.sys.SysRoleCtrl.add', 66, '{\"name\":\"test\",\"resIds\":[1568793053657000,1569039988688001,1568793034295000,1568793473396000,1569039944773001]}', '{\"code\":200,\"msg\":\"角色添加成功\",\"status\":true}', '角色添加', NULL, '2019-09-26 11:25:02', b'1');
-INSERT INTO `sys_operation_log` VALUES (1569468312325000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/add', 'cn.inslee.adminback.ctrl.sys.SysRoleCtrl.add', 35, '{\"name\":\"test1\",\"resIds\":[1569036746501000,1569036597841001,1569036891266001,1568793417548000,1568792818721000,1569035253007000]}', '{\"code\":200,\"msg\":\"角色添加成功\",\"status\":true}', '角色添加', NULL, '2019-09-26 11:25:12', b'1');
-INSERT INTO `sys_operation_log` VALUES (1569468327468000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/group/add', 'cn.inslee.adminback.ctrl.sys.SysGroupCtrl.add', 45, '{\"name\":\"测试用户组\",\"roleIds\":[1569468302284001,1569468312325001]}', '{\"code\":200,\"msg\":\"用户组添加成功\",\"status\":true}', '用户组添加', NULL, '2019-09-26 11:25:27', b'1');
-INSERT INTO `sys_operation_log` VALUES (1569468639303000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/add', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.add', 54, '{\"email\":\"shadow4lee@163.com\",\"groupIds\":[1569468327468001],\"roleIds\":[],\"username\":\"test\"}', NULL, '用户添加', '邮箱已经存在', '2019-09-26 11:30:39', b'0');
-INSERT INTO `sys_operation_log` VALUES (1569468665446000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/add', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.add', 93, '{\"email\":\"dean.lee@aliyun.com\",\"groupIds\":[1569468327468001],\"roleIds\":[],\"username\":\"test\"}', '{\"code\":200,\"msg\":\"用户添加成功\",\"status\":true}', '用户添加', NULL, '2019-09-26 11:31:05', b'1');
-INSERT INTO `sys_operation_log` VALUES (1570837707879000, 1, 'admin', '111.43.19.6', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.status', 28, '{\"id\":1569468665446001,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, '2019-10-12 07:48:28', b'1');
-INSERT INTO `sys_operation_log` VALUES (1570837709507000, 1, 'admin', '111.43.19.6', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.status', 19, '{\"id\":1569468665446001,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, '2019-10-12 07:48:30', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571018950128000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/resetPwd', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.resetPwd', 173, '1569468665446001', '{\"code\":200,\"msg\":\"重置密码成功\",\"status\":true}', '重置用户密码', NULL, '2019-10-14 10:09:10', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571019039453000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 73, '{\"name\":\"数据监控\",\"parentId\":1568793473396000,\"permChar\":\"log:druid:page\",\"seq\":2,\"type\":1,\"url\":\"/log/druid\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:10:39', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571019065711000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 67, '{\"name\":\"数据监控查询\",\"parentId\":1571019039453001,\"permChar\":\"log:druid:list\",\"type\":2,\"url\":\"/log/druid/list\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:11:06', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571019080321000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 312, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1569039988688001,1568876389002000,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', '{\"code\":200,\"msg\":\"角色修改成功\",\"status\":true}', '角色修改', NULL, '2019-10-14 10:11:20', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021635026000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 235, '{\"deptId\":1569661157895000,\"email\":\"aaa@163.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"test\"}', NULL, '用户添加', '用户名已经存在', '2019-10-14 10:53:55', b'0');
-INSERT INTO `sys_operation_log` VALUES (1571021639110000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 244, '{\"deptId\":1569661157895000,\"email\":\"aaa@163.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"test1\"}', '{\"code\":200,\"msg\":\"用户添加成功\",\"status\":true}', '用户添加', NULL, '2019-10-14 10:53:59', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021728820000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 98, '{\"name\":\"部门管理\",\"parentId\":1568793417548000,\"permChar\":\"sys:dept:page\",\"seq\":4,\"type\":1,\"url\":\"/sys/dept\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:55:29', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021754612000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 66, '{\"name\":\"部门添加\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:add\",\"type\":2,\"url\":\"/sys/dept/add\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:55:55', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021786935000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 69, '{\"name\":\"部门修改\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:update\",\"seq\":1,\"type\":2,\"url\":\"/sys/dept/update\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:56:27', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021817630000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 70, '{\"icon\":\"sys:dept:delete\",\"name\":\"部门删除\",\"parentId\":1571021728820001,\"seq\":2,\"type\":2,\"url\":\"/sys/dept/delete\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:56:58', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021835594000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 71, '{\"name\":\"部门查询\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:list\",\"seq\":3,\"type\":2,\"url\":\"/sys/dept/list\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, '2019-10-14 10:57:16', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571021844918000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 286, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1571021786935001,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1571021728820001,1569039988688001,1568876389002000,1571021754612001,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1571021835594001,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1571021817630001,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', '{\"code\":200,\"msg\":\"角色修改成功\",\"status\":true}', '角色修改', NULL, '2019-10-14 10:57:25', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571022007143000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/update', 'cn.inslee.admin.ctrl.sys.SysResCtrl.update', 104, '{\"id\":1571021817630001,\"name\":\"部门删除\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:delete\",\"seq\":2,\"url\":\"/sys/dept/delete\"}', '{\"code\":200,\"msg\":\"修改资源成功\",\"status\":true}', '资源修改', NULL, '2019-10-14 11:00:07', b'1');
-INSERT INTO `sys_operation_log` VALUES (1571022073954000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/dept/update', 'cn.inslee.admin.ctrl.sys.SysDeptCtrl.update', 80, '{\"id\":1569659656619000,\"name\":\"第一层\",\"parentId\":0,\"seq\":0}', '{\"code\":200,\"msg\":\"部门修改成功\",\"status\":true}', '部门修改', NULL, '2019-10-14 11:01:14', b'1');
+INSERT INTO `sys_operation_log` VALUES (1569402657527000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.status', 177, '{\"id\":1,\"status\":true}', NULL, '用户状态修改', '测试项目，无法修改admin用户', 1569402658000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1569402670282000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/delete', 'cn.inslee.adminback.ctrl.sys.SysRoleCtrl.delete', 3, '1568772939750000', NULL, '角色删除', '测试项目，无法修改admin角色', 1569402670000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1569403466116000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/res/delete', 'cn.inslee.adminback.ctrl.sys.SysResCtrl.delete', 79, '1568793417548000', NULL, '资源删除', '测试项目，无法修改admin角色关联的资源', 1569403466000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1569403471414000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/res/update', 'cn.inslee.adminback.ctrl.sys.SysResCtrl.update', 123, '{\"id\":1568793473396000,\"name\":\"日志管理\",\"parentId\":0,\"permChar\":\"log:page\",\"seq\":1,\"url\":\"/log\"}', NULL, '资源修改', '测试项目，无法修改admin角色关联的资源', 1569403471000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1569403477457000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/delete', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.delete', 3, '1', NULL, '用户删除', '测试项目，无法修改admin用户', 1569403477000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1569468302284000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/add', 'cn.inslee.adminback.ctrl.sys.SysRoleCtrl.add', 66, '{\"name\":\"test\",\"resIds\":[1568793053657000,1569039988688001,1568793034295000,1568793473396000,1569039944773001]}', '{\"code\":200,\"msg\":\"角色添加成功\",\"status\":true}', '角色添加', NULL, 1569468302000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1569468312325000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/add', 'cn.inslee.adminback.ctrl.sys.SysRoleCtrl.add', 35, '{\"name\":\"test1\",\"resIds\":[1569036746501000,1569036597841001,1569036891266001,1568793417548000,1568792818721000,1569035253007000]}', '{\"code\":200,\"msg\":\"角色添加成功\",\"status\":true}', '角色添加', NULL, 1569468312000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1569468327468000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/group/add', 'cn.inslee.adminback.ctrl.sys.SysGroupCtrl.add', 45, '{\"name\":\"测试用户组\",\"roleIds\":[1569468302284001,1569468312325001]}', '{\"code\":200,\"msg\":\"用户组添加成功\",\"status\":true}', '用户组添加', NULL, 1569468327000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1569468639303000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/add', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.add', 54, '{\"email\":\"shadow4lee@163.com\",\"groupIds\":[1569468327468001],\"roleIds\":[],\"username\":\"test\"}', NULL, '用户添加', '邮箱已经存在', 1569468639000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1569468665446000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/add', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.add', 93, '{\"email\":\"dean.lee@aliyun.com\",\"groupIds\":[1569468327468001],\"roleIds\":[],\"username\":\"test\"}', '{\"code\":200,\"msg\":\"用户添加成功\",\"status\":true}', '用户添加', NULL, 1569468665000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1570837707879000, 1, 'admin', '111.43.19.6', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.status', 28, '{\"id\":1569468665446001,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1570837708000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1570837709507000, 1, 'admin', '111.43.19.6', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.adminback.ctrl.sys.SysUserCtrl.status', 19, '{\"id\":1569468665446001,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1570837710000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571018950128000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/resetPwd', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.resetPwd', 173, '1569468665446001', '{\"code\":200,\"msg\":\"重置密码成功\",\"status\":true}', '重置用户密码', NULL, 1571018950000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571019039453000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 73, '{\"name\":\"数据监控\",\"parentId\":1568793473396000,\"permChar\":\"log:druid:page\",\"seq\":2,\"type\":1,\"url\":\"/log/druid\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571019039000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571019065711000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 67, '{\"name\":\"数据监控查询\",\"parentId\":1571019039453001,\"permChar\":\"log:druid:list\",\"type\":2,\"url\":\"/log/druid/list\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571019066000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571019080321000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 312, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1569039988688001,1568876389002000,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', '{\"code\":200,\"msg\":\"角色修改成功\",\"status\":true}', '角色修改', NULL, 1571019080000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021635026000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 235, '{\"deptId\":1569661157895000,\"email\":\"aaa@163.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"test\"}', NULL, '用户添加', '用户名已经存在', 1571021635000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571021639110000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 244, '{\"deptId\":1569661157895000,\"email\":\"aaa@163.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"test1\"}', '{\"code\":200,\"msg\":\"用户添加成功\",\"status\":true}', '用户添加', NULL, 1571021639000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021728820000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 98, '{\"name\":\"部门管理\",\"parentId\":1568793417548000,\"permChar\":\"sys:dept:page\",\"seq\":4,\"type\":1,\"url\":\"/sys/dept\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571021729000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021754612000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 66, '{\"name\":\"部门添加\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:add\",\"type\":2,\"url\":\"/sys/dept/add\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571021755000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021786935000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 69, '{\"name\":\"部门修改\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:update\",\"seq\":1,\"type\":2,\"url\":\"/sys/dept/update\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571021787000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021817630000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 70, '{\"icon\":\"sys:dept:delete\",\"name\":\"部门删除\",\"parentId\":1571021728820001,\"seq\":2,\"type\":2,\"url\":\"/sys/dept/delete\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571021818000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021835594000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/add', 'cn.inslee.admin.ctrl.sys.SysResCtrl.add', 71, '{\"name\":\"部门查询\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:list\",\"seq\":3,\"type\":2,\"url\":\"/sys/dept/list\"}', '{\"code\":200,\"msg\":\"添加资源成功\",\"status\":true}', '资源添加', NULL, 1571021836000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571021844918000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 286, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1571021786935001,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1571021728820001,1569039988688001,1568876389002000,1571021754612001,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1571021835594001,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1571021817630001,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', '{\"code\":200,\"msg\":\"角色修改成功\",\"status\":true}', '角色修改', NULL, 1571021845000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571022007143000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/update', 'cn.inslee.admin.ctrl.sys.SysResCtrl.update', 104, '{\"id\":1571021817630001,\"name\":\"部门删除\",\"parentId\":1571021728820001,\"permChar\":\"sys:dept:delete\",\"seq\":2,\"url\":\"/sys/dept/delete\"}', '{\"code\":200,\"msg\":\"修改资源成功\",\"status\":true}', '资源修改', NULL, 1571022007000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571022073954000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/dept/update', 'cn.inslee.admin.ctrl.sys.SysDeptCtrl.update', 80, '{\"id\":1569659656619000,\"name\":\"第一层\",\"parentId\":0,\"seq\":0}', '{\"code\":200,\"msg\":\"部门修改成功\",\"status\":true}', '部门修改', NULL, 1571022074000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571040348690000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 397, '{\"deptId\":1569659656619000,\"email\":\"shadow4lee@163.com\",\"groupIds\":[],\"id\":1,\"nickname\":\"gm\",\"phone\":\"17777777777\",\"remark\":\"系统管理员\",\"roleIds\":[1568772939750000,1569468302284001],\"sex\":1}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571040349000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571040838424000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 427, '{\"deptId\":1569659656619000,\"email\":\"shadow4lee@163.com\",\"groupIds\":[],\"id\":1,\"nickname\":\"gm\",\"phone\":\"17777777777\",\"remark\":\"系统管理员\",\"roleIds\":[1568772939750000,1569468302284001,1569468312325001],\"sex\":1}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571040838000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571100969660000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 93, '{\"id\":1,\"status\":true}', NULL, '用户状态修改', '演示项目，无法操作admin', 1571100970000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571100977130000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/role/delete', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.delete', 106, '1568772939750000', NULL, '角色删除', '当前角色有用户关联，请先解除', 1571100977000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571100985110000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 4, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1571021786935001,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1569039988688001,1571021728820001,1568876389002000,1571021754612001,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1571021835594001,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1571021817630001,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', NULL, '角色修改', '演示项目，无法操作admin关联的角色', 1571100985000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571101001288000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/delete', 'cn.inslee.admin.ctrl.sys.SysResCtrl.delete', 81, '1568862344386000', NULL, '资源删除', '当前资源有角色关联，请先解除', 1571101001000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571101004209000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/update', 'cn.inslee.admin.ctrl.sys.SysResCtrl.update', 184, '{\"id\":1568862344386000,\"name\":\"用户新增\",\"parentId\":1568792652982000,\"permChar\":\"sys:user:add\",\"seq\":0,\"url\":\"/sys/user/add\"}', '{\"code\":200,\"msg\":\"修改资源成功\",\"status\":true}', '资源修改', NULL, 1571101004000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571101078484000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/res/update', 'cn.inslee.admin.ctrl.sys.SysResCtrl.update', 220, '{\"id\":1569039944773001,\"name\":\"登录日志查询\",\"parentId\":1568793034295000,\"permChar\":\"log:login:list\",\"seq\":0,\"url\":\"/log/login/list\"}', NULL, '资源修改', '演示项目，无法操作admin关联的资源', 1571101078000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571107570164000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/delete', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.delete', 60, '1568772939750000', NULL, '角色删除', '当前角色有用户关联，请先解除', 1571107570000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571107573591000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 135, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1571021786935001,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1571021728820001,1569039988688001,1568876389002000,1571021754612001,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1571021835594001,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1571021817630001,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', '{\"code\":200,\"msg\":\"角色修改成功\",\"status\":true}', '角色修改', NULL, 1571107574000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571107586590000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 69, '{\"deptId\":1569659656619000,\"email\":\"shadow4lee@163.com\",\"groupIds\":[],\"id\":1,\"nickname\":\"gm\",\"phone\":\"17777777777\",\"remark\":\"系统管理员\",\"roleIds\":[1568772939750000],\"sex\":1}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571107587000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571108106578000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 258, '{\"deptId\":1569659656619000,\"email\":\"shadow4lee@163.com\",\"groupIds\":[],\"id\":1,\"nickname\":\"gm\",\"phone\":\"17777777777\",\"remark\":\"系统管理员\",\"roleIds\":[1568772939750000],\"sex\":1}', NULL, '用户修改', '演示项目，无法操作admin', 1571108107000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571108113974000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/delete', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.delete', 37, '1568772939750000', NULL, '角色删除', '当前角色有用户关联，请先解除', 1571108114000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571108116625000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/role/update', 'cn.inslee.admin.ctrl.sys.SysRoleCtrl.update', 10, '{\"id\":1568772939750000,\"name\":\"admin\",\"remark\":\"最高权限\",\"resIds\":[1568881517753000,1568881786217000,1571021786935001,1569025948597000,1568793417548000,1568944480258000,1568792818721000,1568968597143000,1569039944773001,1571019039453001,1571019065711001,1568793053657000,1568792740183000,1569036891266001,1568793034295000,1568793473396000,1569036746501000,1569036597841001,1571021728820001,1569039988688001,1568876389002000,1571021754612001,1568881776302000,1568792934828000,1568968652358000,1569033453895000,1571021835594001,1568792652982000,1568862344386000,1568942634425000,1569031805602000,1571021817630001,1569033417472000,1569035253007000],\"roleChar\":\"root\"}', NULL, '角色修改', '演示项目，无法操作admin关联的角色', 1571108117000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571108121486000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 3, '{\"id\":1,\"status\":true}', NULL, '用户状态修改', '演示项目，无法操作admin', 1571108121000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571108126000000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/res/update', 'cn.inslee.admin.ctrl.sys.SysResCtrl.update', 6, '{\"id\":1568793473396000,\"name\":\"日志管理\",\"parentId\":0,\"permChar\":\"log:page\",\"seq\":1,\"url\":\"/log\"}', NULL, '资源修改', '演示项目，无法操作admin关联的资源', 1571108126000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571130530640000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 135, '{\"deptId\":1569729083883000,\"email\":\"aaaa@163.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"aaaa\"}', '{\"code\":200,\"msg\":\"用户添加成功\",\"status\":true}', '用户添加', NULL, 1571130531000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571131229839000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 62, '{\"deptId\":1569729083883000,\"email\":\"dean444@aliyun.com\",\"groupIds\":[1569468327468001],\"id\":1569468665446001,\"roleIds\":[],\"sex\":0}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571131230000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571131667586000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 22, '{\"id\":1571130530641000,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571131668000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571131670532000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 30, '{\"id\":1571130530641000,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571131671000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571131672982000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 21, '{\"id\":1571021639110001,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571131673000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571131673925000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 20, '{\"id\":1571021639110001,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571131674000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571194886915000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 420, '{\"deptId\":1569661157895000,\"email\":\"aaa@163.com\",\"groupIds\":[],\"id\":1571021639110001,\"roleIds\":[1569468302284001,1569468312325001],\"sex\":0}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571194887000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571210989602000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 422, '{\"deptId\":1569729083883000,\"email\":\"dean.lee@aliyun.com\",\"groupIds\":[1569468327468001],\"id\":1569468665446001,\"roleIds\":[],\"sex\":0}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571210990000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571210993728000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/resetPwd', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.resetPwd', 74, '1569468665446001', '{\"code\":200,\"msg\":\"重置密码成功\",\"status\":true}', '重置用户密码', NULL, 1571210994000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571211318926000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/resetPwd', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.resetPwd', 130, '1569468665446001', '{\"code\":200,\"msg\":\"重置密码成功\",\"status\":true}', '重置用户密码', NULL, 1571211319000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571211336460000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 323, '{\"deptId\":1569729083883000,\"email\":\"dean41@aliyun.com\",\"groupIds\":[1569468327468001],\"id\":1569468665446001,\"roleIds\":[],\"sex\":0}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571211336000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571211417461000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 169, '{\"id\":1569468665446001,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571211417000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571211423776000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 164, '{\"id\":1569468665446001,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571211424000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571211442495000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 177, '{\"deptId\":1569661157895000,\"email\":\"dean.lee@aliyun.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"test22\"}', '{\"code\":200,\"msg\":\"用户添加成功\",\"status\":true}', '用户添加', NULL, 1571211442000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571211456579000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 286, '{\"deptId\":1569661157895000,\"email\":\"dean33@aliyun.com\",\"groupIds\":[],\"id\":1571211442495001,\"roleIds\":[1569468302284001],\"sex\":0}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571211457000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571213894930000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/dept/delete', 'cn.inslee.admin.ctrl.sys.SysDeptCtrl.delete', 146, '1569659656619000', NULL, '部门删除', '当前部门有用户关联，请先解除', 1571213895000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571620396650000, 1, 'admin', '123.235.65.206', 'http://admin.inslee.cn/sys/user/delete', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.delete', 2, '1', NULL, '用户删除', '演示项目，无法操作admin', 1571620397000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571633805632000, 1, 'admin', '113.16.66.137', 'http://admin.inslee.cn/sys/user/update', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.update', 184, '{\"age\":11,\"deptId\":1569661157895000,\"email\":\"dean33@aliyun.com\",\"groupIds\":[1569468327468001],\"id\":1571211442495001,\"nickname\":\"11\",\"phone\":\"13151515151\",\"remark\":\"11\",\"roleIds\":[1569468302284001],\"sex\":1}', '{\"code\":200,\"msg\":\"用户修改成功\",\"status\":true}', '用户修改', NULL, 1571633806000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571633811225000, 1, 'admin', '113.16.66.137', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 82, '{\"id\":1571211442495001,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571633811000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571633813497000, 1, 'admin', '113.16.66.137', 'http://admin.inslee.cn/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 73, '{\"id\":1571211442495001,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571633813000, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571642464686000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/add', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.add', 3110, '{\"deptId\":1569661157895000,\"email\":\"aaaa222222222@163.com\",\"groupIds\":[],\"roleIds\":[1569468302284001],\"username\":\"aaaa222\"}', NULL, '用户添加', 'Authentication failed; nested exception is javax.mail.AuthenticationFailedException: 550 User has no permission\n', 1571642465000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571645359974000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 7, '{\"id\":1,\"status\":true}', NULL, '用户状态修改', '演示项目，无法操作admin', 1571645360000, b'0');
+INSERT INTO `sys_operation_log` VALUES (1571984113508000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 394, '{\"id\":1571130530641000,\"status\":true}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571984113508, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571984122378000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/status', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.status', 197, '{\"id\":1571130530641000,\"status\":false}', '{\"code\":200,\"msg\":\"用户状态修改成功\",\"status\":true}', '用户状态修改', NULL, 1571984122379, b'1');
+INSERT INTO `sys_operation_log` VALUES (1571984438229000, 1, 'admin', '127.0.0.1', 'http://localhost:8080/sys/user/resetPwd', 'cn.inslee.admin.ctrl.sys.SysUserCtrl.resetPwd', 1243, '1571021639110001', '{\"code\":200,\"msg\":\"重置密码成功\",\"status\":true}', '重置用户密码', NULL, 1571984438229, b'1');
 
 -- ----------------------------
 -- Table structure for sys_res
@@ -171,55 +258,55 @@ CREATE TABLE `sys_res`  (
   `name` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '资源名称',
   `type` int(1) NOT NULL COMMENT '类型（1-菜单，2-权限）',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '路径',
-  `parent_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '父级id，0-根菜单',
+  `pid` bigint(20) NOT NULL DEFAULT 0 COMMENT '父级id，0-根菜单',
   `perm_char` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '权限字符',
   `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
   `seq` int(5) NOT NULL DEFAULT 0 COMMENT '排序',
   `del_flag` bit(1) NOT NULL DEFAULT b'0' COMMENT '删除状态（0-正常，1-删除）',
   `creator` bigint(20) NOT NULL COMMENT '创建人',
-  `creation_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creation_time` bigint(13) NOT NULL COMMENT '创建时间',
   `modifier` bigint(20) NULL DEFAULT NULL COMMENT '修改时间',
-  `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `modify_time` bigint(13) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_res
 -- ----------------------------
-INSERT INTO `sys_res` VALUES (1568792652982000, '用户管理', 1, '/sys/user', 1568793417548000, 'sys:user:page', NULL, 0, b'0', 1, '2019-09-18 15:45:35', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568792740183000, '角色管理', 1, '/sys/role', 1568793417548000, 'sys:role:page', NULL, 1, b'0', 1, '2019-09-18 15:46:16', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568792818721000, '资源管理', 1, '/sys/res', 1568793417548000, 'sys:res:page', NULL, 3, b'0', 1, '2019-09-18 15:47:28', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568792934828000, '用户组管理', 1, '/sys/group', 1568793417548000, 'sys:group:page', NULL, 2, b'0', 1, '2019-09-18 15:49:47', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568793034295000, '登陆日志', 1, '/log/login', 1568793473396000, 'log:login:page', NULL, 0, b'0', 1, '2019-09-18 15:50:51', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568793053657000, '操作日志', 1, '/log/operation', 1568793473396000, 'log:operation:page', NULL, 1, b'0', 1, '2019-09-18 15:51:24', 1, '2019-09-21 11:50:53');
-INSERT INTO `sys_res` VALUES (1568793417548000, '系统管理', 1, '/sys', 0, 'sys:page', NULL, 0, b'0', 1, '2019-09-18 15:57:32', 1, '2019-09-25 17:11:31');
-INSERT INTO `sys_res` VALUES (1568793473396000, '日志管理', 1, '/log', 0, 'log:page', NULL, 1, b'0', 1, '2019-09-18 15:58:29', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568862344386000, '用户新增', 2, '/sys/user/add', 1568792652982000, 'sys:user:add', NULL, 0, b'0', 1, '2019-09-19 11:06:16', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568876389002000, '用户修改', 2, '/sys/user/update', 1568792652982000, 'sys:user:update', NULL, 1, b'0', 1, '2019-09-19 15:00:26', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568881517753000, '用户删除', 2, '/sys/userdelete', 1568792652982000, 'sys:user:delete', NULL, 2, b'0', 1, '2019-09-19 16:25:00', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568881776302000, '用户状态', 2, '/sys/user/status', 1568792652982000, 'sys:user:status', NULL, 3, b'0', 1, '2019-09-19 16:29:27', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568881786217000, '用户查询', 2, '/sys/user/list', 1568792652982000, 'sys:user:list', NULL, 4, b'0', 1, '2019-09-19 16:30:20', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568942634425000, '角色新增', 2, '/sys/role/add', 1568792740183000, 'sys:role:add', NULL, 0, b'0', 1, '2019-09-20 09:24:24', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568944480258000, '角色修改', 2, '/sys/role/update', 1568792740183000, 'sys:role:update', NULL, 1, b'0', 1, '2019-09-20 09:55:11', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568968597143000, '角色删除', 2, '/sys/role/delete', 1568792740183000, 'sys:role:delete', NULL, 2, b'0', 1, '2019-09-20 16:37:08', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1568968652358000, '角色查询', 2, '/sys/role/list', 1568792740183000, 'sys:role:list', NULL, 3, b'0', 1, '2019-09-20 16:38:02', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569025948597000, '用户组新增', 2, '/sys/group/add', 1568792934828000, 'sys:group:add', NULL, 0, b'0', 1, '2019-09-21 08:33:05', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569031805602000, '用户组修改', 2, '/sys/group/update', 1568792934828000, 'sys:group:update', NULL, 1, b'0', 1, '2019-09-21 10:11:04', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569033417472000, '用户组删除', 2, '/sys/group/delete', 1568792934828000, 'sys:group:delete', NULL, 2, b'0', 1, '2019-09-21 10:37:29', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569033453895000, '用户组查询', 2, '/sys/group/list', 1568792934828000, 'sys:group:list', NULL, 3, b'0', 1, '2019-09-21 10:38:22', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569035253007000, '资源添加', 2, '/sys/res:add', 1568792818721000, 'sys:res:add', NULL, 0, b'0', 1, '2019-09-21 11:08:07', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569036597841001, '资源修改', 2, '/sys/res/update', 1568792818721000, 'sys:res:update', NULL, 1, b'0', 1, '2019-09-21 11:29:58', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569036746501000, '资源删除', 2, '/sys/res/delete', 1568792818721000, 'sys:res:delete', NULL, 2, b'0', 1, '2019-09-21 11:32:27', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569036891266001, '资源查询', 2, '/sys/res/list', 1568792818721000, 'sys:res:list', NULL, 3, b'0', 1, '2019-09-21 11:34:51', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1569039944773001, '登录日志查询', 2, '/log/login/list', 1568793034295000, 'log:login:list', NULL, 0, b'0', 1, '2019-09-21 12:25:45', 1, '2019-09-21 17:07:35');
-INSERT INTO `sys_res` VALUES (1569039988688001, '操作日志查询', 2, '/log/operation/list', 1568793053657000, 'log:operation:list', NULL, 0, b'0', 1, '2019-09-21 12:26:29', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1571019039453001, '数据监控', 1, '/log/druid', 1568793473396000, 'log:druid:page', NULL, 2, b'0', 1, '2019-10-14 10:10:39', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1571019065711001, '数据监控查询', 2, '/log/druid/list', 1571019039453001, 'log:druid:list', NULL, 0, b'0', 1, '2019-10-14 10:11:06', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1571021728820001, '部门管理', 1, '/sys/dept', 1568793417548000, 'sys:dept:page', NULL, 4, b'0', 1, '2019-10-14 10:55:29', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1571021754612001, '部门添加', 2, '/sys/dept/add', 1571021728820001, 'sys:dept:add', NULL, 0, b'0', 1, '2019-10-14 10:55:55', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1571021786935001, '部门修改', 2, '/sys/dept/update', 1571021728820001, 'sys:dept:update', NULL, 1, b'0', 1, '2019-10-14 10:56:27', NULL, NULL);
-INSERT INTO `sys_res` VALUES (1571021817630001, '部门删除', 2, '/sys/dept/delete', 1571021728820001, 'sys:dept:delete', NULL, 2, b'0', 1, '2019-10-14 10:56:58', 1, '2019-10-14 11:00:07');
-INSERT INTO `sys_res` VALUES (1571021835594001, '部门查询', 2, '/sys/dept/list', 1571021728820001, 'sys:dept:list', NULL, 3, b'0', 1, '2019-10-14 10:57:16', NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568792652982000, '用户管理', 1, '/sys/user', 1568793417548000, 'sys:user:page', NULL, 0, b'0', 1, 1568792735000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568792740183000, '角色管理', 1, '/sys/role', 1568793417548000, 'sys:role:page', NULL, 1, b'0', 1, 1568792776000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568792818721000, '资源管理', 1, '/sys/res', 1568793417548000, 'sys:res:page', NULL, 3, b'0', 1, 1568792848000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568792934828000, '用户组管理', 1, '/sys/group', 1568793417548000, 'sys:group:page', NULL, 2, b'0', 1, 1568792987000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568793034295000, '登陆日志', 1, '/log/login', 1568793473396000, 'log:login:page', NULL, 0, b'0', 1, 1568793051000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568793053657000, '操作日志', 1, '/log/operation', 1568793473396000, 'log:operation:page', NULL, 1, b'0', 1, 1568793084000, 1, 1569037853000);
+INSERT INTO `sys_res` VALUES (1568793417548000, '系统管理', 1, '/sys', 0, 'sys:page', NULL, 0, b'0', 1, 1568793452000, 1, 1569402691000);
+INSERT INTO `sys_res` VALUES (1568793473396000, '日志管理', 1, '/log', 0, 'log:page', NULL, 1, b'0', 1, 1568793509000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568862344386000, '用户新增', 2, '/sys/user/add', 1568792652982000, 'sys:user:add', NULL, 0, b'0', 1, 1568862376000, 1, 1571101004000);
+INSERT INTO `sys_res` VALUES (1568876389002000, '用户修改', 2, '/sys/user/update', 1568792652982000, 'sys:user:update', NULL, 1, b'0', 1, 1568876426000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568881517753000, '用户删除', 2, '/sys/userdelete', 1568792652982000, 'sys:user:delete', NULL, 2, b'0', 1, 1568881500000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568881776302000, '用户状态', 2, '/sys/user/status', 1568792652982000, 'sys:user:status', NULL, 3, b'0', 1, 1568881767000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568881786217000, '用户查询', 2, '/sys/user/list', 1568792652982000, 'sys:user:list', NULL, 4, b'0', 1, 1568881820000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568942634425000, '角色新增', 2, '/sys/role/add', 1568792740183000, 'sys:role:add', NULL, 0, b'0', 1, 1568942664000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568944480258000, '角色修改', 2, '/sys/role/update', 1568792740183000, 'sys:role:update', NULL, 1, b'0', 1, 1568944511000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568968597143000, '角色删除', 2, '/sys/role/delete', 1568792740183000, 'sys:role:delete', NULL, 2, b'0', 1, 1568968628000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1568968652358000, '角色查询', 2, '/sys/role/list', 1568792740183000, 'sys:role:list', NULL, 3, b'0', 1, 1568968682000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569025948597000, '用户组新增', 2, '/sys/group/add', 1568792934828000, 'sys:group:add', NULL, 0, b'0', 1, 1569025985000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569031805602000, '用户组修改', 2, '/sys/group/update', 1568792934828000, 'sys:group:update', NULL, 1, b'0', 1, 1569031864000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569033417472000, '用户组删除', 2, '/sys/group/delete', 1568792934828000, 'sys:group:delete', NULL, 2, b'0', 1, 1569033449000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569033453895000, '用户组查询', 2, '/sys/group/list', 1568792934828000, 'sys:group:list', NULL, 3, b'0', 1, 1569033502000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569035253007000, '资源添加', 2, '/sys/res:add', 1568792818721000, 'sys:res:add', NULL, 0, b'0', 1, 1569035287000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569036597841001, '资源修改', 2, '/sys/res/update', 1568792818721000, 'sys:res:update', NULL, 1, b'0', 1, 1569036598000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569036746501000, '资源删除', 2, '/sys/res/delete', 1568792818721000, 'sys:res:delete', NULL, 2, b'0', 1, 1569036747000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569036891266001, '资源查询', 2, '/sys/res/list', 1568792818721000, 'sys:res:list', NULL, 3, b'0', 1, 1569036891000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1569039944773001, '登录日志查询', 2, '/log/login/list', 1568793034295000, 'log:login:list', NULL, 0, b'0', 1, 1569039945000, 1, 1569056855000);
+INSERT INTO `sys_res` VALUES (1569039988688001, '操作日志查询', 2, '/log/operation/list', 1568793053657000, 'log:operation:list', NULL, 0, b'0', 1, 1569039989000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1571019039453001, '数据监控', 1, '/log/druid', 1568793473396000, 'log:druid:page', NULL, 2, b'0', 1, 1571019039000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1571019065711001, '数据监控查询', 2, '/log/druid/list', 1571019039453001, 'log:druid:list', NULL, 0, b'0', 1, 1571019066000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1571021728820001, '部门管理', 1, '/sys/dept', 1568793417548000, 'sys:dept:page', NULL, 4, b'0', 1, 1571021729000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1571021754612001, '部门添加', 2, '/sys/dept/add', 1571021728820001, 'sys:dept:add', NULL, 0, b'0', 1, 1571021755000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1571021786935001, '部门修改', 2, '/sys/dept/update', 1571021728820001, 'sys:dept:update', NULL, 1, b'0', 1, 1571021787000, NULL, NULL);
+INSERT INTO `sys_res` VALUES (1571021817630001, '部门删除', 2, '/sys/dept/delete', 1571021728820001, 'sys:dept:delete', NULL, 2, b'0', 1, 1571021818000, 1, 1571022007000);
+INSERT INTO `sys_res` VALUES (1571021835594001, '部门查询', 2, '/sys/dept/list', 1571021728820001, 'sys:dept:list', NULL, 3, b'0', 1, 1571021836000, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -232,18 +319,18 @@ CREATE TABLE `sys_role`  (
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   `del_flag` bit(1) NOT NULL DEFAULT b'0' COMMENT '删除状态（0-正常，1-删除）',
   `creator` bigint(20) NOT NULL COMMENT '创建人',
-  `creation_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creation_time` bigint(13) NOT NULL COMMENT '创建时间',
   `modifier` bigint(20) NULL DEFAULT NULL COMMENT '修改时间',
-  `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `modify_time` bigint(13) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES (1568772939750000, 'admin', 'root', '最高权限', b'0', 1, '2019-09-18 10:16:40', 1, '2019-10-14 10:57:25');
-INSERT INTO `sys_role` VALUES (1569468302284001, 'test', NULL, NULL, b'0', 1, '2019-09-26 11:25:02', NULL, NULL);
-INSERT INTO `sys_role` VALUES (1569468312325001, 'test1', NULL, NULL, b'0', 1, '2019-09-26 11:25:12', NULL, NULL);
+INSERT INTO `sys_role` VALUES (1568772939750000, 'admin', 'root', '最高权限', b'0', 1, 1568773000000, 1, 1571107574000);
+INSERT INTO `sys_role` VALUES (1569468302284001, 'test', NULL, NULL, b'0', 1, 1569468302000, NULL, NULL);
+INSERT INTO `sys_role` VALUES (1569468312325001, 'test1', NULL, NULL, b'0', 1, 1569468312000, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role_res
@@ -322,25 +409,27 @@ CREATE TABLE `sys_user`  (
   `status` bit(1) NOT NULL DEFAULT b'0' COMMENT '锁定状态（0-正常，1-锁定）',
   `del_flag` bit(1) NOT NULL DEFAULT b'0' COMMENT '删除状态（0-正常，1-删除）',
   `creator` bigint(20) NOT NULL COMMENT '创建人',
-  `creation_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creation_time` bigint(13) NOT NULL COMMENT '创建时间',
   `modifier` bigint(20) NULL DEFAULT NULL COMMENT '修改时间',
-  `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  `modify_time` bigint(13) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '9867a651e0b92d41c0f6c1f9ec509e52', '91e75166-e6db-45be-9fc7-a175be776860', 1569659656619000, 'gm', '17777777777', 'shadow4lee@163.com', 1, NULL, '系统管理员', b'0', b'0', 1, '2019-09-18 09:54:11', 1, '2019-09-25 15:40:29');
-INSERT INTO `sys_user` VALUES (1569468665446001, 'test', '068fad57e014b42473f83fc29b6106c1', 'e3f8f00a-2f79-4ffd-8a36-c680d53795c3', 1569729083883000, NULL, NULL, 'dean.lee@aliyun.com', 0, NULL, NULL, b'0', b'0', 1, '2019-09-26 11:31:05', 1, '2019-10-14 10:09:10');
-INSERT INTO `sys_user` VALUES (1571021639110001, 'test1', '75cf9d1a24a8cf5b45ca375e7a4d9f1d', 'f67d2c4c-1d53-4d08-b692-44b25320244d', 1569661157895000, NULL, NULL, 'aaa@163.com', 0, NULL, NULL, b'0', b'0', 1, '2019-10-14 10:53:59', NULL, NULL);
+INSERT INTO `sys_user` VALUES (1, 'admin', '9867a651e0b92d41c0f6c1f9ec509e52', '91e75166-e6db-45be-9fc7-a175be776860', 1569659656619000, 'gm', '17777777777', 'shadow4lee@163.com', 1, NULL, '系统管理员', b'0', b'0', 1, 1568771651000, 1, 1571107587000);
+INSERT INTO `sys_user` VALUES (1569468665446001, 'test', 'c96b52e8653d95e6aa7eb0d8a0fc4ff6', 'e3f8f00a-2f79-4ffd-8a36-c680d53795c3', 1569729083883000, NULL, NULL, 'dean41@aliyun.com', 0, NULL, NULL, b'0', b'0', 1, 1569468665000, 1, 1571211424000);
+INSERT INTO `sys_user` VALUES (1571021639110001, 'test1', '8ff525d3185489218cf05875efdd1df2', 'f67d2c4c-1d53-4d08-b692-44b25320244d', 1569661157895000, NULL, NULL, 'aaa@163.com', 0, NULL, NULL, b'0', b'0', 1, 1571021639000, 1, 1571984438234);
+INSERT INTO `sys_user` VALUES (1571130530641000, 'aaaa', '1febe3737b6009d0c3a1d2a0d95e0881', '4cf9069a-b5cf-4ca0-839f-57a5f5377aa8', 1569729083883000, NULL, NULL, 'aaaa@163.com', 0, NULL, NULL, b'0', b'0', 1, 1571130531000, 1, 1571984122379);
+INSERT INTO `sys_user` VALUES (1571211442495001, 'test22', '4af83aa735930b101ba765e37b483c13', '3b613e8b-c876-42b7-b0fe-5cf601879ce9', 1569661157895000, '11', '13151515151', 'dean33@aliyun.com', 1, 11, '11', b'0', b'0', 1, 1571211442000, 1, 1571633813000);
 
 -- ----------------------------
 -- Table structure for sys_user_group
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_group`;
 CREATE TABLE `sys_user_group`  (
-  `user_id` bigint(20) NOT NULL,
+  `uid` bigint(20) NOT NULL,
   `group_id` bigint(20) NOT NULL
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户与用户组关联表' ROW_FORMAT = Dynamic;
 
@@ -348,13 +437,14 @@ CREATE TABLE `sys_user_group`  (
 -- Records of sys_user_group
 -- ----------------------------
 INSERT INTO `sys_user_group` VALUES (1569468665446001, 1569468327468001);
+INSERT INTO `sys_user_group` VALUES (1571211442495001, 1569468327468001);
 
 -- ----------------------------
 -- Table structure for sys_user_role
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
-  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `uid` bigint(20) NOT NULL COMMENT '用户id',
   `role_id` bigint(20) NOT NULL COMMENT '角色id'
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户与角色关联表' ROW_FORMAT = Dynamic;
 
@@ -362,6 +452,9 @@ CREATE TABLE `sys_user_role`  (
 -- Records of sys_user_role
 -- ----------------------------
 INSERT INTO `sys_user_role` VALUES (1, 1568772939750000);
+INSERT INTO `sys_user_role` VALUES (1571130530641000, 1569468302284001);
 INSERT INTO `sys_user_role` VALUES (1571021639110001, 1569468302284001);
+INSERT INTO `sys_user_role` VALUES (1571021639110001, 1569468312325001);
+INSERT INTO `sys_user_role` VALUES (1571211442495001, 1569468302284001);
 
 SET FOREIGN_KEY_CHECKS = 1;

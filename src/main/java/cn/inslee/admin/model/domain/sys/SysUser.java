@@ -46,9 +46,9 @@ public class SysUser implements Serializable {
 
     private Long creator;
 
-    private Date creationTime;
+    private Long creationTime;
 
     private Long modifier;
 
-    private Date modifyTime;
+    private Long modifyTime;
 }

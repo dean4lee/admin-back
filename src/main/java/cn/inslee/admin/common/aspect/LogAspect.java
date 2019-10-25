@@ -71,14 +71,14 @@ public class LogAspect {
 
         SysOperationLog log = new SysOperationLog();
         log.setId(Key.nextKey())
-                .setUserId(user.getId())
+                .setUid(user.getId())
                 .setUsername(user.getUsername())
                 .setIp(ip)
                 .setUrl(url)
                 .setMethod(method)
                 .setParams(params)
                 .setValue(value)
-                .setCreateTime(new Date());
+                .setCreationTime(System.currentTimeMillis());
 
         Object result;
         try {

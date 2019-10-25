@@ -87,7 +87,7 @@ public class SysUserCtrl {
         //copy用户属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser().setId(Key.nextKey())
-                .setCreator(admin.getId()).setCreationTime(new Date())
+                .setCreator(admin.getId()).setCreationTime(System.currentTimeMillis())
                 .setSalt(salt).setPassword(password);
         BeanUtils.copyProperties(userFrom, user);
 
@@ -121,7 +121,7 @@ public class SysUserCtrl {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser()
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(userFrom, user);
 
         //copy用户关联的角色属性
@@ -150,7 +150,7 @@ public class SysUserCtrl {
         SysUser user = new SysUser().setId(id)
                 .setDelFlag(true)
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
 
         return JsonResult.success(userService.delete(user));
     }
@@ -171,7 +171,7 @@ public class SysUserCtrl {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser()
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(userFrom, user);
 
         return JsonResult.success(userService.status(user));
@@ -191,7 +191,7 @@ public class SysUserCtrl {
         SysUser user = new SysUser()
                 .setId(admin.getId())
                 .setModifier(admin.getId())
-                .setModifyTime(new Date());
+                .setModifyTime(System.currentTimeMillis());
         BeanUtils.copyProperties(userFrom, user);
 
         return JsonResult.success(userService.updateSelf(user));
@@ -213,7 +213,7 @@ public class SysUserCtrl {
         //设置6位随机密码
         String password = RandomUtil.getRandom(6);
         SysUser user = new SysUser().setId(id).setPassword(password)
-                .setModifier(admin.getId()).setModifyTime(new Date());
+                .setModifier(admin.getId()).setModifyTime(System.currentTimeMillis());
 
         return JsonResult.success(userService.resetPwd(user));
     }
@@ -229,7 +229,7 @@ public class SysUserCtrl {
         if (roleIds != null && !roleIds.isEmpty()) {
             roleIds.forEach(roleId -> {
                 SysUserRole sysUserRole = new SysUserRole()
-                        .setUserId(userId)
+                        .setUid(userId)
                         .setRoleId(roleId);
                 sysUserRoleList.add(sysUserRole);
             });
@@ -249,7 +249,7 @@ public class SysUserCtrl {
         if (groupIds != null && !groupIds.isEmpty()) {
             groupIds.forEach(groupId -> {
                 SysUserGroup sysUserGroup = new SysUserGroup()
-                        .setUserId(userId)
+                        .setUid(userId)
                         .setGroupId(groupId);
                 sysUserGroupList.add(sysUserGroup);
             });

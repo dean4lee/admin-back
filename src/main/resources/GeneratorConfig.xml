@@ -14,7 +14,7 @@
         </commentGenerator>
         <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-            connectionURL="jdbc:mysql://47.105.192.129/admin" userId="root" password="Xty2019..">
+            connectionURL="jdbc:mysql://localhost/admin" userId="root" password="password">
         </jdbcConnection>
 
         <!-- <jdbcConnection driverClass="oracle.jdbc.OracleDriver" connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:yycg"

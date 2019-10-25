@@ -120,7 +120,7 @@ public class SysUserServiceImpl implements SysUserService {
 
             //删除之前关联的角色
             SysUserRole userRole = new SysUserRole()
-                    .setUserId(user.getId());
+                    .setUid(user.getId());
             userRoleMapper.delete(userRole);
             //如果角色不为空，添加新关联的角色
             if (!sysUserRoleList.isEmpty()) {
@@ -129,7 +129,7 @@ public class SysUserServiceImpl implements SysUserService {
 
             //删除之前关联的用户组
             SysUserGroup userGroup = new SysUserGroup()
-                    .setUserId(user.getId());
+                    .setUid(user.getId());
             userGroupMapper.delete(userGroup);
             //如果用户组不为空，则添加新关联的用户组
             if (!sysUserGroupList.isEmpty()) {

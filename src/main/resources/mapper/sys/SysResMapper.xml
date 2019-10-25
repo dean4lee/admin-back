@@ -6,23 +6,23 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="url" property="url" jdbcType="VARCHAR"/>
-        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="pid" property="pid" jdbcType="BIGINT"/>
         <result column="perm_char" property="permChar" jdbcType="VARCHAR"/>
         <result column="icon" property="icon" jdbcType="VARCHAR"/>
         <result column="seq" property="seq" jdbcType="INTEGER"/>
         <result column="del_flag" property="delFlag" jdbcType="BIT"/>
         <result column="creator" property="creator" jdbcType="BIGINT"/>
-        <result column="creation_time" property="creationTime" jdbcType="TIMESTAMP"/>
+        <result column="creation_time" property="creationTime" jdbcType="BIGINT"/>
         <result column="modifier" property="modifier" jdbcType="BIGINT"/>
-        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, `name`, `type`, url, parent_id, perm_char, icon, seq,
+    id, `name`, `type`, url, pid, perm_char, icon, seq,
     del_flag, creator, creation_time, modifier, modify_time
     </sql>
     <sql id="Associate_View_List">
-    res.id, res.`name`, res.`type`, res.url, res.parent_id, res.perm_char, res.icon, res.seq
+    res.id, res.`name`, res.`type`, res.url, res.pid, res.perm_char, res.icon, res.seq
     </sql>
 
     <select id="selectPermCharByRoleIds" parameterType="list" resultType="string">
@@ -63,7 +63,7 @@
       UPDATE sys_res
       SET `name` = #{name},
         url = #{url},
-        parent_id = #{parentId},
+        pid = #{pid},
         perm_char = #{permChar},
         icon = #{icon},
         seq = #{seq},

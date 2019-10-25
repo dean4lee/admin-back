@@ -131,7 +131,7 @@ public class LoginCtrl {
                 .setId(Key.nextKey())
                 .setUsername(username)
                 .setOsName(osName).setDeviceType(deviceType)
-                .setIp(ip).setLoginTime(new Date())
+                .setIp(ip).setLoginTime(System.currentTimeMillis())
                 .setStatus(status).setMsg(msg);
         loginLogService.add(log);
     }
