@@ -69,7 +69,14 @@ public interface SysUserService {
     String updateSelf(SysUser user);
 
     /**
-     * 重置密码
+     * 管理员重置用户密码
+     * @param user
+     * @return
+     */
+    String randomPwd(SysUser user);
+
+    /**
+     * 修改自己的密码
      * @param user
      * @return
      */

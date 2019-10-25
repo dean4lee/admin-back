@@ -1,5 +1,6 @@
 package cn.inslee.admin.service.sys.impl;
 
+import cn.inslee.admin.common.constant.Constant;
 import cn.inslee.admin.common.constant.PermConstant;
 import cn.inslee.admin.model.dao.sys.SysUserGroupMapper;
 import cn.inslee.admin.model.dao.sys.SysUserMapper;
@@ -16,6 +17,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserGroupMapper userGroupMapper;
     @Autowired
-    private ThreadPoolExecutor threadPool;
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -164,7 +166,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public String resetPwd(SysUser user) {
+    public String randomPwd(SysUser user) {
         SysUser sysUser = userMapper.selectByPrimaryKey(user.getId());
         String password = user.getPassword();
         user.setPassword(DigestUtils.md5DigestAsHex((password + sysUser.getSalt()).getBytes()));
@@ -184,6 +186,19 @@ public class SysUserServiceImpl implements SysUserService {
 //        });
 
         return "重置密码成功";
+    }
+
+    @Override
+    public String resetPwd(SysUser user) {
+        SysUser sysUser = userMapper.selectByPrimaryKey(user.getId());
+        user.setPassword(DigestUtils.md5DigestAsHex((user.getPassword() + sysUser.getSalt()).getBytes()));
+        userMapper.updateByPrimaryKeySelective(user);
+
+        //删除redis中保存的验证码，即：验证码使用后立马失效
+        redisTemplate.opsForHash().delete(String.format(Constant.EMAIL_CODE, user.getId()), Constant.CODE_KEY);
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "修改密码成功";
     }
 
 }

@@ -2,6 +2,7 @@ package cn.inslee.admin.ctrl.sys;
 
 import cn.inslee.admin.common.annotation.Limiting;
 import cn.inslee.admin.common.annotation.SystemLog;
+import cn.inslee.admin.common.constant.Constant;
 import cn.inslee.admin.common.result.JsonResult;
 import cn.inslee.admin.common.result.PageResult;
 import cn.inslee.admin.common.test.TestUtil;
@@ -11,6 +12,7 @@ import cn.inslee.admin.model.domain.sys.SysUser;
 import cn.inslee.admin.model.domain.sys.SysUserGroup;
 import cn.inslee.admin.model.domain.sys.SysUserRole;
 import cn.inslee.admin.model.dto.sys.SysUserDTO;
+import cn.inslee.admin.model.from.sys.ResetPwdFrom;
 import cn.inslee.admin.model.from.sys.UserAddFrom;
 import cn.inslee.admin.model.from.sys.UserStatusFrom;
 import cn.inslee.admin.model.from.sys.UserUpdateFrom;
@@ -24,6 +26,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,6 +51,8 @@ import java.util.UUID;
 @RequestMapping("/sys/user")
 @Validated
 public class SysUserCtrl {
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private SysUserService userService;
@@ -196,15 +201,15 @@ public class SysUserCtrl {
     }
 
     /**
-     * 重置用户密码
+     * 重置用户密码, 管理员给用户重置随机密码
      * @param id
      * @return
      */
     @SystemLog("重置用户密码")
-    @Limiting
-    @PutMapping("resetPwd")
+    @Limiting(frequency = 1)
+    @PutMapping("randomPwd")
     @RequiresPermissions("sys:user:update")
-    public JsonResult resetPwd(@NotNull(message = "id不能为空") Long id) {
+    public JsonResult randomPwd(@NotNull(message = "id不能为空") Long id) {
         //线上演示使用
         TestUtil.isAdmin(id);
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
@@ -213,6 +218,29 @@ public class SysUserCtrl {
         SysUser user = new SysUser().setId(id).setPassword(password)
                 .setModifier(admin.getId()).setModifyTime(System.currentTimeMillis());
 
+        return JsonResult.success(userService.randomPwd(user));
+    }
+
+    /**
+     * 修改密码，用户修改自己的密码
+     * @param from
+     * @return
+     */
+    @SystemLog("修改密码")
+    @Limiting
+    @PutMapping("resetPwd")
+    public JsonResult resetPwd(@Validated @RequestBody ResetPwdFrom from) {
+        SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
+        //校验邮箱验证码
+        String code = (String) redisTemplate.opsForHash().get(String.format(Constant.EMAIL_CODE, admin.getId()), Constant.CODE_KEY);
+        Assert.isTrue(from.getCode().equals(code), "验证码错误");
+        //copy bean
+        SysUser user = new SysUser()
+                .setId(admin.getId())
+                .setModifier(admin.getId())
+                .setModifyTime(System.currentTimeMillis());
+
+        BeanUtils.copyProperties(from, user);
         return JsonResult.success(userService.resetPwd(user));
     }
 

@@ -1,8 +1,10 @@
 package cn.inslee.admin.ctrl.sys;
 
 import cn.inslee.admin.common.annotation.Limiting;
+import cn.inslee.admin.common.constant.Constant;
 import cn.inslee.admin.common.result.JsonResult;
 import cn.inslee.admin.common.util.Key;
+import cn.inslee.admin.common.util.RandomUtil;
 import cn.inslee.admin.common.util.WebUtil;
 import cn.inslee.admin.model.domain.log.SysLoginLog;
 import cn.inslee.admin.model.domain.sys.SysUser;
@@ -20,6 +22,11 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.TimeoutUtils;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author dean.lee
@@ -45,6 +53,12 @@ public class LoginCtrl {
     private SysLoginLogService loginLogService;
     @Autowired
     private DefaultKaptcha defaultKaptcha;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private JavaMailSender mailSender;
+    @Autowired
+    private Environment env;
 
     @PostMapping("/login")
     @Limiting(frequency = 5, cycle = 5 * 60 * 1000, expireTime = 30 * 60, message = "登录过于频繁，30分钟后解除限制")
@@ -95,8 +109,8 @@ public class LoginCtrl {
      * 获取验证码
      */
     @Limiting
-    @GetMapping("code")
-    public void getCodeImage(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/code")
+    public void getImageCode(HttpServletRequest request, HttpServletResponse response) {
         //生成算术验证码
         String createText = defaultKaptcha.createText();
         //将运算和结果分离
@@ -112,6 +126,25 @@ public class LoginCtrl {
         } catch (IOException e) {
             log.error("", e);
         }
+    }
+
+    @Limiting(frequency = 2)
+    @GetMapping("/email/code")
+    public void getEmailCode(HttpServletRequest request, HttpServletResponse response) {
+        SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
+        String random = RandomUtil.getRandom(4);
+        String content = "您的验证码：" + random + "\n 有效期为5分钟";
+
+        SimpleMailMessage mailMsg = new SimpleMailMessage();
+        mailMsg.setFrom(env.getProperty("spring.mail.username"));
+        mailMsg.setTo(admin.getEmail());
+        mailMsg.setSubject(env.getProperty("mail-subject.code"));
+        mailMsg.setText(content);
+        mailSender.send(mailMsg);
+
+        //验证码保存到redis中，有效时间为5分钟
+        redisTemplate.opsForHash().put(String.format(Constant.EMAIL_CODE, admin.getId()), Constant.CODE_KEY, random);
+        redisTemplate.expire(String.format(Constant.EMAIL_CODE, admin.getId()), 5, TimeUnit.MINUTES);
     }
 
 
