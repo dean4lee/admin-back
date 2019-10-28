@@ -20,7 +20,7 @@ public class DeptUpdateFrom {
     private String name;
 
     @NotNull(message = "父级部门不能为空")
-    private Long parentId;
+    private Long pid;
 
     @NotNull(message = "排序不能为空")
     private Integer seq;

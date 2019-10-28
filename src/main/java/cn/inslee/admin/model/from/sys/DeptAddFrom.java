@@ -16,7 +16,7 @@ public class DeptAddFrom {
     @Length(min = 1, max = 12, message = "非法的部门名称")
     private String name;
 
-    private Long parentId;
+    private Long pid;
 
     private Integer seq;
 
