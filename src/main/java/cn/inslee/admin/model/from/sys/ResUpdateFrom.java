@@ -21,7 +21,7 @@ public class ResUpdateFrom {
 
     private String url;
 
-    private Long parentId;
+    private Long pid;
 
     private String permChar;
 

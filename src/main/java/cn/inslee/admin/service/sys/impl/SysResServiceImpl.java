@@ -57,7 +57,7 @@ public class SysResServiceImpl implements SysResService {
     @Override
     public List<SysRes> menuList() {
         Example example = new Example(SysRes.class);
-        example.selectProperties("id", "name");
+        example.selectProperties("id", "name", "pid");
         example.and().andEqualTo("delFlag", false)
                 .andEqualTo("type", 1);
         List<SysRes> menuList = resMapper.selectByExample(example);

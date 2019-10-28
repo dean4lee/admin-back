@@ -23,7 +23,7 @@ public class ResAddFrom {
 
     private String url;
 
-    private Long parentId;
+    private Long pid;
 
     private String permChar;
 
