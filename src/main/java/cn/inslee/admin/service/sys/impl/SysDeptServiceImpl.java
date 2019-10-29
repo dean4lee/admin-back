@@ -65,7 +65,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     public String delete(SysDept dept) {
         //判断当前删除的资源是否关联角色，关联角色则不能删除
         long userTotal = userMapper.countUserBydeptId(dept.getId());
-        Assert.isTrue(userTotal == 0, "当前部门有用户关联，请先解除");
+        Assert.isTrue(userTotal == 0, "当前部门或下级部门有用户关联，请先解除");
 
         deptMapper.updateByPrimaryKeySelective(dept);
 

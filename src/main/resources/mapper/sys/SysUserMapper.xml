@@ -160,12 +160,14 @@
     </update>
 
     <select id="countUserBydeptId" parameterType="long" resultType="long">
-        select
-          count(*)
-        from
-          sys_user
-        where
-          del_flag = false
-        and dept_id = #{deptId}
+      SELECT
+	    count( * )
+      FROM
+	    sys_user `user`,
+	    sys_dept dept
+      WHERE
+	    `user`.del_flag = FALSE
+	  AND `user`.dept_id = dept.id
+	  AND dept.`level` LIKE concat('%', #{deptId}, '%')
     </select>
 </mapper>
