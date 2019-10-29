@@ -72,6 +72,7 @@ public class SysResServiceImpl implements SysResService {
                 .setName(res.getName());
         synchronized (this) {
             Assert.isNull(resMapper.selectOne(example), "资源名称重复");
+            this.addLevel(res);
             resMapper.insertSelective(res);
         }
         return "添加资源成功";
@@ -87,6 +88,7 @@ public class SysResServiceImpl implements SysResService {
         synchronized (this) {
             SysRes sysRes = resMapper.selectOne(example);
             Assert.isTrue(sysRes == null || sysRes.getId().equals(res.getId()), "资源名称重复");
+            this.addLevel(res);
             resMapper.updateById(res);
         }
         return "修改资源成功";
@@ -102,5 +104,26 @@ public class SysResServiceImpl implements SysResService {
 
         resMapper.updateByPrimaryKeySelective(res);
         return "资源删除成功";
+    }
+
+    /**
+     * 添加level层级字段
+     * @param res
+     */
+    private void addLevel(SysRes res){
+        //获取上级部门，添加层级字段level
+        if(res.getPid().equals(0L)){
+            res.setLevel("0");
+        }else {
+            SysRes example = new SysRes()
+                    .setDelFlag(false)
+                    .setId(res.getPid());
+            SysRes parentRes = resMapper.selectOne(example);
+            //校验父级资源是否存在
+            Assert.notNull(parentRes, "请选择正确的父级资源");
+            //校验父级资源是否原本是自己的子级
+            Assert.isTrue(!parentRes.getLevel().contains(res.getId().toString()), "父级资源不能向下级修改");
+            res.setLevel(parentRes.getLevel() + "," + res.getPid());
+        }
     }
 }

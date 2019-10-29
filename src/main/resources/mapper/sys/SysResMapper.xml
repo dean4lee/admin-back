@@ -7,6 +7,7 @@
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="url" property="url" jdbcType="VARCHAR"/>
         <result column="pid" property="pid" jdbcType="BIGINT"/>
+        <result column="level" property="level" jdbcType="VARCHAR"/>
         <result column="perm_char" property="permChar" jdbcType="VARCHAR"/>
         <result column="icon" property="icon" jdbcType="VARCHAR"/>
         <result column="seq" property="seq" jdbcType="INTEGER"/>
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, `name`, `type`, url, pid, perm_char, icon, seq,
+    id, `name`, `type`, url, pid, `level`, perm_char, icon, seq,
     del_flag, creator, creation_time, modifier, modify_time
     </sql>
     <sql id="Associate_View_List">
@@ -64,6 +65,7 @@
       SET `name` = #{name},
         url = #{url},
         pid = #{pid},
+        `level` = #{level},
         perm_char = #{permChar},
         icon = #{icon},
         seq = #{seq},

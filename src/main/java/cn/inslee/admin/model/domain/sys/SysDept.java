@@ -20,6 +20,8 @@ public class SysDept implements Serializable {
 
     private Long pid;
 
+    private String level;
+
     private Integer seq;
 
     private String remark;

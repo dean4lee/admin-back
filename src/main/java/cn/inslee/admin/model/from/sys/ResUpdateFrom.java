@@ -21,11 +21,13 @@ public class ResUpdateFrom {
 
     private String url;
 
+    @NotNull(message = "父级资源不能为空")
     private Long pid;
 
     private String permChar;
 
     private String icon;
 
+    @NotNull(message = "排序不能为空")
     private Integer seq;
 }

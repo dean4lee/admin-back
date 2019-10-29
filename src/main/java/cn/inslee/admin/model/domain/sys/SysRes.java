@@ -28,6 +28,8 @@ public class SysRes implements Serializable {
 
     private Long pid;
 
+    private String level;
+
     private String permChar;
 
     private String icon;

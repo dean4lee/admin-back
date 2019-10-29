@@ -37,6 +37,8 @@ public class SysDeptServiceImpl implements SysDeptService {
                 .setDelFlag(false);
         synchronized (this) {
             Assert.isNull(deptMapper.selectOne(example), "部门名称重复");
+            //获取上级部门，添加层级字段level
+            this.addLevel(dept);
             deptMapper.insertSelective(dept);
         }
 
@@ -52,6 +54,8 @@ public class SysDeptServiceImpl implements SysDeptService {
         synchronized (this) {
             SysDept sysDept = deptMapper.selectOne(example);
             Assert.isTrue(sysDept == null || sysDept.getId().equals(dept.getId()), "部门名称重复");
+            //获取上级部门，添加层级字段level
+            this.addLevel(dept);
             deptMapper.updateById(dept);
         }
         return "部门修改成功";
@@ -68,4 +72,24 @@ public class SysDeptServiceImpl implements SysDeptService {
         return "部门删除成功";
     }
 
+    /**
+     * 添加level层级字段
+     * @param dept
+     */
+    private void addLevel(SysDept dept){
+        //获取上级部门，添加层级字段level
+        if(dept.getPid().equals(0L)){
+            dept.setLevel("0");
+        }else {
+            SysDept example = new SysDept()
+                    .setDelFlag(false)
+                    .setId(dept.getPid());
+            SysDept parentDept = deptMapper.selectOne(example);
+            //校验父级部门是否存在
+            Assert.notNull(parentDept, "请选择正确的父级部门");
+            //校验父级资源是否原本是自己的子级
+            Assert.isTrue(!parentDept.getLevel().contains(dept.getId().toString()), "父级部门不能向下级修改");
+            dept.setLevel(parentDept.getLevel() + "," + dept.getPid());
+        }
+    }
 }
