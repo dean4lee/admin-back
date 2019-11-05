@@ -1,6 +1,6 @@
 package cn.inslee.admin.service.sys.impl;
 
-import cn.inslee.admin.common.constant.PermConstant;
+import cn.inslee.admin.common.constant.CacheConstant;
 import cn.inslee.admin.model.dao.sys.SysGroupMapper;
 import cn.inslee.admin.model.dao.sys.SysGroupRoleMapper;
 import cn.inslee.admin.model.domain.sys.SysGroup;
@@ -67,7 +67,8 @@ public class SysGroupServiceImpl implements SysGroupService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, allEntries = true)
     public String update(SysGroup group, List<SysGroupRole> sysGroupRoleList) {
         //校验角色名称是否存在，不存在则修改
         SysGroup example = new SysGroup()
@@ -89,7 +90,8 @@ public class SysGroupServiceImpl implements SysGroupService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, allEntries = true)
     public String delete(SysGroup group) {
         //判断当前删除的角色是否关联用户，关联用户不能删除
         long userTotal = groupMapper.countUserByGroupId(group.getId());

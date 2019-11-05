@@ -1,7 +1,7 @@
 package cn.inslee.admin.service.sys.impl;
 
 import cn.inslee.admin.common.constant.Constant;
-import cn.inslee.admin.common.constant.PermConstant;
+import cn.inslee.admin.common.constant.CacheConstant;
 import cn.inslee.admin.model.dao.sys.SysUserGroupMapper;
 import cn.inslee.admin.model.dao.sys.SysUserMapper;
 import cn.inslee.admin.model.dao.sys.SysUserRoleMapper;
@@ -26,7 +26,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
 
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author dean.lee
@@ -100,7 +99,7 @@ public class SysUserServiceImpl implements SysUserService {
         SimpleMailMessage mailMsg = new SimpleMailMessage();
         mailMsg.setFrom(env.getProperty("spring.mail.username"));
         mailMsg.setTo(user.getEmail());
-        mailMsg.setSubject(env.getProperty("mail-subject.register"));
+        mailMsg.setSubject(Constant.EMAIL_REGISTER);
         mailMsg.setText(content);
         mailSender.send(mailMsg);
 //        });
@@ -109,7 +108,8 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, key = "#p0.id")
     public String update(SysUser user, List<SysUserRole> sysUserRoleList, List<SysUserGroup> sysUserGroupList) {
         SysUser example = new SysUser()
                 .setId(user.getId())
@@ -143,7 +143,8 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, key = "#p0.id")
     public String delete(SysUser user) {
         userMapper.updateByPrimaryKeySelective(user);
         return "用户删除成功";
@@ -151,7 +152,8 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, key = "#p0.id")
     public String status(SysUser user) {
         userMapper.updateByPrimaryKeySelective(user);
         return "用户状态修改成功";
@@ -180,7 +182,7 @@ public class SysUserServiceImpl implements SysUserService {
         SimpleMailMessage mailMsg = new SimpleMailMessage();
         mailMsg.setFrom(env.getProperty("spring.mail.username"));
         mailMsg.setTo(sysUser.getEmail());
-        mailMsg.setSubject(env.getProperty("mail-subject.resetPwd"));
+        mailMsg.setSubject(Constant.EMAIL_RESET);
         mailMsg.setText(content);
         mailSender.send(mailMsg);
 //        });

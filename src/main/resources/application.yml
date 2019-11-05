@@ -29,9 +29,3 @@ spring:
     password: password
     properties:
       mail.smtp.ssl.enable: true
-
-mail-subject:
-  #自定义邮件主题
-  register: "用户注册成功"
-  resetPwd: "重置密码提醒"
-  code: "验证码"

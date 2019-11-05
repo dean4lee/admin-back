@@ -24,7 +24,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.annotation.Validated;
@@ -39,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -138,7 +136,7 @@ public class LoginCtrl {
         SimpleMailMessage mailMsg = new SimpleMailMessage();
         mailMsg.setFrom(env.getProperty("spring.mail.username"));
         mailMsg.setTo(admin.getEmail());
-        mailMsg.setSubject(env.getProperty("mail-subject.code"));
+        mailMsg.setSubject(Constant.EMAIL_CODE_MSG);
         mailMsg.setText(content);
         mailSender.send(mailMsg);
 

@@ -1,6 +1,6 @@
 package cn.inslee.admin.service.sys.impl;
 
-import cn.inslee.admin.common.constant.PermConstant;
+import cn.inslee.admin.common.constant.CacheConstant;
 import cn.inslee.admin.model.dao.sys.SysResMapper;
 import cn.inslee.admin.model.domain.sys.SysRes;
 import cn.inslee.admin.service.sys.SysResService;
@@ -12,7 +12,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.DigestUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -30,15 +29,16 @@ public class SysResServiceImpl implements SysResService {
     private SysResMapper resMapper;
 
     @Override
-    @Cacheable(value = PermConstant.RES, key = PermConstant.CHAR_KEY + "+ #p0")
+    @Cacheable(value = CacheConstant.RES_CHAR, key = "#p0")
     public Set<String> selectPremCharByUserId(Long uid) {
         List<Long> roleIds = roleService.selectIdByUserId(uid);
         List<String> permChars = resMapper.selectPermCharByRoleIds(roleIds);
+
         return Sets.newHashSet(permChars);
     }
 
     @Override
-    @Cacheable(value = PermConstant.RES, key = PermConstant.MENU_KEY + "+ #p0")
+    @Cacheable(value = CacheConstant.RES_MENU, key = "#p0")
     public List<SysRes> resources(Long uid) {
         List<Long> roleIds = roleService.selectIdByUserId(uid);
         List<SysRes> resList = resMapper.selectMenuByRoleIds(roleIds);
@@ -80,7 +80,7 @@ public class SysResServiceImpl implements SysResService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = PermConstant.RES, allEntries = true)
+    @CacheEvict(value = {CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, allEntries = true)
     public String update(SysRes res) {
         SysRes example = new SysRes()
                 .setDelFlag(false)
@@ -96,7 +96,7 @@ public class SysResServiceImpl implements SysResService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = PermConstant.RES, allEntries = true)
+    @CacheEvict(value = {CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, allEntries = true)
     public String delete(SysRes res) {
         //判断当前删除的资源是否关联角色，关联角色则不能删除
         long roleTotal = resMapper.countRoleByResId(res.getId());
@@ -108,13 +108,14 @@ public class SysResServiceImpl implements SysResService {
 
     /**
      * 添加level层级字段
+     *
      * @param res
      */
-    private void addLevel(SysRes res){
+    private void addLevel(SysRes res) {
         //获取上级部门，添加层级字段level
-        if(res.getPid().equals(0L)){
+        if (res.getPid().equals(0L)) {
             res.setLevel("0");
-        }else {
+        } else {
             SysRes example = new SysRes()
                     .setDelFlag(false)
                     .setId(res.getPid());

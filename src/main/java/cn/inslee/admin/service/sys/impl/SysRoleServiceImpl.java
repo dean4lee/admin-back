@@ -1,6 +1,6 @@
 package cn.inslee.admin.service.sys.impl;
 
-import cn.inslee.admin.common.constant.PermConstant;
+import cn.inslee.admin.common.constant.CacheConstant;
 import cn.inslee.admin.model.dao.sys.SysRoleMapper;
 import cn.inslee.admin.model.dao.sys.SysRoleResMapper;
 import cn.inslee.admin.model.domain.sys.SysRole;
@@ -33,7 +33,6 @@ public class SysRoleServiceImpl implements SysRoleService {
     private SysRoleResMapper roleResMapper;
 
     @Override
-    @Cacheable(value = PermConstant.ROLE, key = PermConstant.OBJ_KEY + "+ #p0")
     public Set<SysRole> selectByUserId(Long uid) {
         List<SysRole> roles = roleMapper.selectByUserId(uid);
         List<SysRole> groupRoles = roleMapper.selectByUserIdAssociateGroup(uid);
@@ -44,7 +43,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     @Override
-    @Cacheable(value = PermConstant.ROLE, key = PermConstant.ID_KEY + "+ #p0")
+    @Cacheable(value = CacheConstant.ROLE_ID, key = "#p0")
     public List<Long> selectIdByUserId(Long uid) {
         Set<SysRole> roles = this.selectByUserId(uid);
         List<Long> roleIds = Lists.newArrayList();
@@ -53,7 +52,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     @Override
-    @Cacheable(value = PermConstant.ROLE, key = PermConstant.CHAR_KEY + "+ #p0")
+    @Cacheable(value = CacheConstant.ROLE_CHAR, key = "#p0")
     public Set<String> selectRoleCharByUserId(Long uid) {
         Set<SysRole> roles = this.selectByUserId(uid);
         List<String> roleChars = Lists.newArrayList();
@@ -99,7 +98,8 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, allEntries = true)
     public String update(SysRole role, List<SysRoleRes> sysRoleResList) {
         //校验角色名称是否存在，不存在则修改
         SysRole example = new SysRole()
@@ -120,7 +120,8 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    @CacheEvict(value = {PermConstant.ROLE, PermConstant.RES}, allEntries = true)
+    @CacheEvict(value = {CacheConstant.ROLE_ID, CacheConstant.ROLE_CHAR,
+            CacheConstant.RES_CHAR, CacheConstant.RES_MENU}, allEntries = true)
     public String delete(SysRole role) {
         //判断当前删除的角色是否关联用户，关联用户不能删除
         long userTotal = roleMapper.countUserByRoleId(role.getId());
