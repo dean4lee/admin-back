@@ -191,8 +191,12 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public String resetPwd(SysUser user) {
+    public String resetPwd(SysUser user, String ordPassword) {
         SysUser sysUser = userMapper.selectByPrimaryKey(user.getId());
+        //校验旧密码是否相同
+        String ordMd5Password = DigestUtils.md5DigestAsHex((ordPassword + sysUser.getSalt()).getBytes());
+        Assert.isTrue(ordMd5Password.equals(sysUser.getPassword()), "旧密码校验失败");
+
         user.setPassword(DigestUtils.md5DigestAsHex((user.getPassword() + sysUser.getSalt()).getBytes()));
         userMapper.updateByPrimaryKeySelective(user);
 

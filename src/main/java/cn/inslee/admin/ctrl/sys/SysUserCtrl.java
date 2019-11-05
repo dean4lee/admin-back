@@ -226,7 +226,7 @@ public class SysUserCtrl {
      * @return
      */
     @SystemLog("修改密码")
-    @Limiting
+    @Limiting(frequency = 3, cycle = 5 * 60 * 1000, expireTime = 30 * 60, message = "操作过于频繁，30分钟后解除限制")
     @PutMapping("resetPwd")
     public JsonResult resetPwd(@Validated @RequestBody ResetPwdForm form) {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
@@ -240,7 +240,7 @@ public class SysUserCtrl {
                 .setModifyTime(System.currentTimeMillis());
 
         BeanUtils.copyProperties(form, user);
-        return JsonResult.success(userService.resetPwd(user));
+        return JsonResult.success(userService.resetPwd(user, form.getOrdPassword()));
     }
 
     /**

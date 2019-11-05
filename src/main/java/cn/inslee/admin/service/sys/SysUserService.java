@@ -78,7 +78,8 @@ public interface SysUserService {
     /**
      * 修改自己的密码
      * @param user
+     * @param ordPassword
      * @return
      */
-    String resetPwd(SysUser user);
+    String resetPwd(SysUser user, String ordPassword);
 }

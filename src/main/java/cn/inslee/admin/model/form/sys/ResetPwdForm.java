@@ -13,6 +13,10 @@ import javax.validation.constraints.NotNull;
 public class ResetPwdForm {
 
     @NotNull(message = "密码不能为空")
+    @Length(min = 6, max = 16, message = "非法的旧密码")
+    private String ordPassword;
+
+    @NotNull(message = "密码不能为空")
     @Length(min = 6, max = 16, message = "非法的密码")
     private String password;
 
