@@ -130,7 +130,7 @@ public class LoginCtrl {
     @GetMapping("/email/code")
     public void getEmailCode(HttpServletRequest request, HttpServletResponse response) {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
-        String random = RandomUtil.getRandom(4);
+        String random = RandomUtil.getRandomNum(4);
         String content = "您的验证码：" + random + "\n 有效期为5分钟";
 
         SimpleMailMessage mailMsg = new SimpleMailMessage();

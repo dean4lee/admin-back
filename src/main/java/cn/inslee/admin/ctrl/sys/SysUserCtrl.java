@@ -87,7 +87,7 @@ public class SysUserCtrl {
         //生成随机盐
         String salt = UUID.randomUUID().toString();
         //生成6位随机密码
-        String password = RandomUtil.getRandom(6);
+        String password = RandomUtil.getRandomChar(6);
         //copy用户属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser().setId(Key.nextKey())
@@ -213,7 +213,7 @@ public class SysUserCtrl {
         TestUtil.isAdmin(id);
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         //设置6位随机密码
-        String password = RandomUtil.getRandom(6);
+        String password = RandomUtil.getRandomChar(6);
         SysUser user = new SysUser().setId(id).setPassword(password)
                 .setModifier(admin.getId()).setModifyTime(System.currentTimeMillis());
 
