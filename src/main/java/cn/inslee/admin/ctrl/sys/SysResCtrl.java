@@ -7,8 +7,8 @@ import cn.inslee.admin.common.test.TestUtil;
 import cn.inslee.admin.common.util.Key;
 import cn.inslee.admin.model.domain.sys.SysRes;
 import cn.inslee.admin.model.domain.sys.SysUser;
-import cn.inslee.admin.model.from.sys.ResAddFrom;
-import cn.inslee.admin.model.from.sys.ResUpdateFrom;
+import cn.inslee.admin.model.form.sys.ResAddForm;
+import cn.inslee.admin.model.form.sys.ResUpdateForm;
 import cn.inslee.admin.service.sys.SysResService;
 import cn.inslee.admin.service.sys.SysRoleService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -99,21 +98,21 @@ public class SysResCtrl {
     /**
      * 资源添加
      *
-     * @param resFrom
+     * @param resForm
      * @return
      */
     @SystemLog("资源添加")
     @Limiting
     @PostMapping("/add")
     @RequiresPermissions("sys:res:add")
-    public JsonResult add(@Validated @RequestBody ResAddFrom resFrom) {
+    public JsonResult add(@Validated @RequestBody ResAddForm resForm) {
         //copy资源属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRes res = new SysRes()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
                 .setCreationTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(resFrom, res);
+        BeanUtils.copyProperties(resForm, res);
 
         return JsonResult.success(resService.add(res));
     }
@@ -121,22 +120,22 @@ public class SysResCtrl {
     /**
      * 资源修改
      *
-     * @param resFrom
+     * @param resForm
      * @return
      */
     @SystemLog("资源修改")
     @Limiting
     @PutMapping("/update")
     @RequiresPermissions("sys:res:update")
-    public JsonResult update(@Validated @RequestBody ResUpdateFrom resFrom) {
+    public JsonResult update(@Validated @RequestBody ResUpdateForm resForm) {
         //线上演示使用
-        TestUtil.isAdminRes(resFrom.getId());
+        TestUtil.isAdminRes(resForm.getId());
         //copy 资源属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRes res = new SysRes()
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(resFrom, res);
+        BeanUtils.copyProperties(resForm, res);
 
         return JsonResult.success(resService.update(res));
     }

@@ -12,11 +12,11 @@ import cn.inslee.admin.model.domain.sys.SysUser;
 import cn.inslee.admin.model.domain.sys.SysUserGroup;
 import cn.inslee.admin.model.domain.sys.SysUserRole;
 import cn.inslee.admin.model.dto.sys.SysUserDTO;
-import cn.inslee.admin.model.from.sys.ResetPwdFrom;
-import cn.inslee.admin.model.from.sys.UserAddFrom;
-import cn.inslee.admin.model.from.sys.UserStatusFrom;
-import cn.inslee.admin.model.from.sys.UserUpdateFrom;
-import cn.inslee.admin.model.from.sys.UserUpdateSelfFrom;
+import cn.inslee.admin.model.form.sys.ResetPwdForm;
+import cn.inslee.admin.model.form.sys.UserAddForm;
+import cn.inslee.admin.model.form.sys.UserStatusForm;
+import cn.inslee.admin.model.form.sys.UserUpdateForm;
+import cn.inslee.admin.model.form.sys.UserUpdateSelfForm;
 import cn.inslee.admin.model.query.sys.UserQuery;
 import cn.inslee.admin.service.sys.SysUserService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -74,17 +73,17 @@ public class SysUserCtrl {
     /**
      * 用户添加
      *
-     * @param userFrom
+     * @param userForm
      * @return
      */
     @SystemLog("用户添加")
     @Limiting
     @PostMapping("/add")
     @RequiresPermissions("sys:user:add")
-    public JsonResult add(@Validated @RequestBody UserAddFrom userFrom) {
+    public JsonResult add(@Validated @RequestBody UserAddForm userForm) {
         //判断用户关联的角色和用户组，如果两者都没关联，返回错误
-        Assert.isTrue((userFrom.getRoleIds() != null && !userFrom.getRoleIds().isEmpty()) ||
-                (userFrom.getGroupIds() != null && !userFrom.getGroupIds().isEmpty()), "角色和用户组必须选择");
+        Assert.isTrue((userForm.getRoleIds() != null && !userForm.getRoleIds().isEmpty()) ||
+                (userForm.getGroupIds() != null && !userForm.getGroupIds().isEmpty()), "角色和用户组必须选择");
         //生成随机盐
         String salt = UUID.randomUUID().toString();
         //生成6位随机密码
@@ -94,13 +93,13 @@ public class SysUserCtrl {
         SysUser user = new SysUser().setId(Key.nextKey())
                 .setCreator(admin.getId()).setCreationTime(System.currentTimeMillis())
                 .setSalt(salt).setPassword(password);
-        BeanUtils.copyProperties(userFrom, user);
+        BeanUtils.copyProperties(userForm, user);
 
         //copy用户关联的角色属性
-        List<SysUserRole> sysUserRoleList = this.copyUserRole(userFrom.getRoleIds(), user.getId());
+        List<SysUserRole> sysUserRoleList = this.copyUserRole(userForm.getRoleIds(), user.getId());
 
         //copy用户关联的用户组属性
-        List<SysUserGroup> sysUserGroupList = this.copyUserGroup(userFrom.getGroupIds(), user.getId());
+        List<SysUserGroup> sysUserGroupList = this.copyUserGroup(userForm.getGroupIds(), user.getId());
 
         return JsonResult.success(userService.add(user, sysUserRoleList, sysUserGroupList));
     }
@@ -108,32 +107,32 @@ public class SysUserCtrl {
     /**
      * 修改用户信息
      *
-     * @param userFrom
+     * @param userForm
      * @return
      */
     @SystemLog("用户修改")
     @Limiting
     @PutMapping("/update")
     @RequiresPermissions("sys:user:update")
-    public JsonResult update(@Validated @RequestBody UserUpdateFrom userFrom) {
+    public JsonResult update(@Validated @RequestBody UserUpdateForm userForm) {
         //线上演示使用
-        TestUtil.isAdmin(userFrom.getId());
+        TestUtil.isAdmin(userForm.getId());
         //判断用户关联的角色和用户组，如果两者都没关联，返回错误
-        Assert.isTrue((userFrom.getRoleIds() != null && !userFrom.getRoleIds().isEmpty()) ||
-                (userFrom.getGroupIds() != null && !userFrom.getGroupIds().isEmpty()), "角色和用户组必须选择");
+        Assert.isTrue((userForm.getRoleIds() != null && !userForm.getRoleIds().isEmpty()) ||
+                (userForm.getGroupIds() != null && !userForm.getGroupIds().isEmpty()), "角色和用户组必须选择");
 
         //copy用户属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser()
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(userFrom, user);
+        BeanUtils.copyProperties(userForm, user);
 
         //copy用户关联的角色属性
-        List<SysUserRole> sysUserRoleList = this.copyUserRole(userFrom.getRoleIds(), user.getId());
+        List<SysUserRole> sysUserRoleList = this.copyUserRole(userForm.getRoleIds(), user.getId());
 
         //copy用户关联的用户组属性
-        List<SysUserGroup> sysUserGroupList = this.copyUserGroup(userFrom.getGroupIds(), user.getId());
+        List<SysUserGroup> sysUserGroupList = this.copyUserGroup(userForm.getGroupIds(), user.getId());
 
         return JsonResult.success(userService.update(user, sysUserRoleList, sysUserGroupList));
     }
@@ -163,21 +162,21 @@ public class SysUserCtrl {
     /**
      * 修改用户状态
      *
-     * @param userFrom
+     * @param userForm
      * @return
      */
     @SystemLog("用户状态修改")
     @Limiting
     @PutMapping("/status")
     @RequiresPermissions("sys:user:status")
-    public JsonResult status(@Validated @RequestBody UserStatusFrom userFrom) {
+    public JsonResult status(@Validated @RequestBody UserStatusForm userForm) {
         //线上演示使用
-        TestUtil.isAdmin(userFrom.getId());
+        TestUtil.isAdmin(userForm.getId());
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser()
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(userFrom, user);
+        BeanUtils.copyProperties(userForm, user);
 
         return JsonResult.success(userService.status(user));
     }
@@ -185,17 +184,17 @@ public class SysUserCtrl {
     /**
      * 修改自己的用户信息
      *
-     * @param userFrom
+     * @param userForm
      * @return
      */
     @PutMapping("updateSelf")
-    public JsonResult updateSelf(@RequestBody @Validated UserUpdateSelfFrom userFrom) {
+    public JsonResult updateSelf(@RequestBody @Validated UserUpdateSelfForm userForm) {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysUser user = new SysUser()
                 .setId(admin.getId())
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(userFrom, user);
+        BeanUtils.copyProperties(userForm, user);
 
         return JsonResult.success(userService.updateSelf(user));
     }
@@ -223,24 +222,24 @@ public class SysUserCtrl {
 
     /**
      * 修改密码，用户修改自己的密码
-     * @param from
+     * @param form
      * @return
      */
     @SystemLog("修改密码")
     @Limiting
     @PutMapping("resetPwd")
-    public JsonResult resetPwd(@Validated @RequestBody ResetPwdFrom from) {
+    public JsonResult resetPwd(@Validated @RequestBody ResetPwdForm form) {
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         //校验邮箱验证码
         String code = (String) redisTemplate.opsForHash().get(String.format(Constant.EMAIL_CODE, admin.getId()), Constant.CODE_KEY);
-        Assert.isTrue(from.getCode().equals(code), "验证码错误");
+        Assert.isTrue(form.getCode().equals(code), "验证码错误");
         //copy bean
         SysUser user = new SysUser()
                 .setId(admin.getId())
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
 
-        BeanUtils.copyProperties(from, user);
+        BeanUtils.copyProperties(form, user);
         return JsonResult.success(userService.resetPwd(user));
     }
 

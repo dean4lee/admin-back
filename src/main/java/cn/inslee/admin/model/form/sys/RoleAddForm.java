@@ -1,4 +1,4 @@
-package cn.inslee.admin.model.from.sys;
+package cn.inslee.admin.model.form.sys;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -12,7 +12,7 @@ import java.util.Set;
  * <p>
  */
 @Data
-public class RoleAddFrom {
+public class RoleAddForm {
 
     @NotNull(message = "角色名不能为空")
     @Length(min = 1, max = 12, message = "非法的角色名")

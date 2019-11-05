@@ -6,8 +6,8 @@ import cn.inslee.admin.common.result.JsonResult;
 import cn.inslee.admin.common.util.Key;
 import cn.inslee.admin.model.domain.sys.SysDept;
 import cn.inslee.admin.model.domain.sys.SysUser;
-import cn.inslee.admin.model.from.sys.DeptAddFrom;
-import cn.inslee.admin.model.from.sys.DeptUpdateFrom;
+import cn.inslee.admin.model.form.sys.DeptAddForm;
+import cn.inslee.admin.model.form.sys.DeptUpdateForm;
 import cn.inslee.admin.model.query.sys.DeptQuery;
 import cn.inslee.admin.service.sys.SysDeptService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 /**
  * @author dean.lee
@@ -55,21 +54,21 @@ public class SysDeptCtrl {
 
     /**
      * 添加部门
-     * @param deptFrom
+     * @param deptForm
      * @return
      */
     @SystemLog("部门添加")
     @Limiting
     @PostMapping("/add")
     @RequiresPermissions("sys:dept:add")
-    public JsonResult add(@Validated @RequestBody DeptAddFrom deptFrom){
+    public JsonResult add(@Validated @RequestBody DeptAddForm deptForm){
         //copy 部门属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysDept dept = new SysDept()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
                 .setCreationTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(deptFrom, dept);
+        BeanUtils.copyProperties(deptForm, dept);
 
         return JsonResult.success(deptService.add(dept));
     }
@@ -79,13 +78,13 @@ public class SysDeptCtrl {
     @Limiting
     @PutMapping("/update")
     @RequiresPermissions("sys:dept:update")
-    public JsonResult update(@Validated @RequestBody DeptUpdateFrom deptFrom){
+    public JsonResult update(@Validated @RequestBody DeptUpdateForm deptForm){
         //copy 部门属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysDept dept = new SysDept()
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(deptFrom, dept);
+        BeanUtils.copyProperties(deptForm, dept);
 
         return JsonResult.success(deptService.update(dept));
     }

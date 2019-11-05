@@ -10,8 +10,8 @@ import cn.inslee.admin.model.domain.sys.SysRole;
 import cn.inslee.admin.model.domain.sys.SysRoleRes;
 import cn.inslee.admin.model.domain.sys.SysUser;
 import cn.inslee.admin.model.dto.sys.SysRoleDTO;
-import cn.inslee.admin.model.from.sys.RoleAddFrom;
-import cn.inslee.admin.model.from.sys.RoleUpdateFrom;
+import cn.inslee.admin.model.form.sys.RoleAddForm;
+import cn.inslee.admin.model.form.sys.RoleUpdateForm;
 import cn.inslee.admin.model.query.sys.RoleQuery;
 import cn.inslee.admin.service.sys.SysRoleService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -78,24 +77,24 @@ public class SysRoleCtrl {
     /**
      * 角色添加
      *
-     * @param roleFrom
+     * @param roleForm
      * @return
      */
     @SystemLog("角色添加")
     @Limiting
     @PostMapping("/add")
     @RequiresPermissions(value = "sys:role:add")
-    public JsonResult add(@Validated @RequestBody RoleAddFrom roleFrom) {
+    public JsonResult add(@Validated @RequestBody RoleAddForm roleForm) {
         //copy角色属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRole role = new SysRole()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
                 .setCreationTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(roleFrom, role);
+        BeanUtils.copyProperties(roleForm, role);
 
         //copy角色关联的资源
-        List<SysRoleRes> sysRoleResList = this.copyRoleRes(roleFrom.getResIds(), role.getId());
+        List<SysRoleRes> sysRoleResList = this.copyRoleRes(roleForm.getResIds(), role.getId());
 
         return JsonResult.success(roleService.add(role, sysRoleResList));
     }
@@ -104,18 +103,18 @@ public class SysRoleCtrl {
     @RequiresPermissions("sys:role:update")
     @PutMapping("update")
     @Limiting
-    public JsonResult update(@Validated @RequestBody RoleUpdateFrom roleFrom) {
+    public JsonResult update(@Validated @RequestBody RoleUpdateForm roleForm) {
         //线上演示使用
-        TestUtil.isAdminRole(roleFrom.getId());
+        TestUtil.isAdminRole(roleForm.getId());
         //copy角色属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysRole role = new SysRole()
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(roleFrom, role);
+        BeanUtils.copyProperties(roleForm, role);
 
         //copy角色关联资源的属性
-        List<SysRoleRes> sysRoleResList = this.copyRoleRes(roleFrom.getResIds(), role.getId());
+        List<SysRoleRes> sysRoleResList = this.copyRoleRes(roleForm.getResIds(), role.getId());
 
         return JsonResult.success(roleService.update(role, sysRoleResList));
     }

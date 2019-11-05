@@ -1,7 +1,8 @@
-package cn.inslee.admin.model.from.sys;
+package cn.inslee.admin.model.form.sys;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
@@ -10,14 +11,15 @@ import javax.validation.constraints.NotNull;
  * <p>
  */
 @Data
-public class ResUpdateFrom {
-
-    @NotNull(message = "id不能为空")
-    private Long id;
+public class ResAddForm {
 
     @NotNull(message = "资源名称不能为空")
     @Length(min = 1, max = 12, message = "非法的资源名称")
     private String name;
+
+    @NotNull(message = "资源类型不能为空")
+    @Range(min = 1, max = 2, message = "非法的资源类型")
+    private Integer type;
 
     private String url;
 

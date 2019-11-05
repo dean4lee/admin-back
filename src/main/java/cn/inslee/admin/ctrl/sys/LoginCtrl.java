@@ -8,7 +8,7 @@ import cn.inslee.admin.common.util.RandomUtil;
 import cn.inslee.admin.common.util.WebUtil;
 import cn.inslee.admin.model.domain.log.SysLoginLog;
 import cn.inslee.admin.model.domain.sys.SysUser;
-import cn.inslee.admin.model.from.sys.UserLoginFrom;
+import cn.inslee.admin.model.form.sys.UserLoginForm;
 import cn.inslee.admin.service.log.SysLoginLogService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
@@ -60,7 +60,7 @@ public class LoginCtrl {
 
     @PostMapping("/login")
     @Limiting(frequency = 5, cycle = 5 * 60 * 1000, expireTime = 30 * 60, message = "登录过于频繁，30分钟后解除限制")
-    public JsonResult login(@RequestBody @Validated UserLoginFrom user) {
+    public JsonResult login(@RequestBody @Validated UserLoginForm user) {
         String code = "code";
         //记录错误信息
         String msg = null;

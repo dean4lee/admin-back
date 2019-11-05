@@ -1,4 +1,4 @@
-package cn.inslee.admin.model.from.sys;
+package cn.inslee.admin.model.form.sys;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -14,7 +14,7 @@ import java.util.Set;
  * <p>
  */
 @Data
-public class UserUpdateFrom {
+public class UserUpdateForm {
 
     @NotNull(message = "id不能为空")
     private Long id;

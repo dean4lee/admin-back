@@ -1,4 +1,4 @@
-package cn.inslee.admin.model.from.sys;
+package cn.inslee.admin.model.form.sys;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * <p>
  */
 @Data
-public class UserStatusFrom {
+public class UserStatusForm {
 
     @NotNull(message = "id不能为空")
     private Long id;

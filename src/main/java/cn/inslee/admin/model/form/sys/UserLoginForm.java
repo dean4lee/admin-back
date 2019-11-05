@@ -1,4 +1,4 @@
-package cn.inslee.admin.model.from.sys;
+package cn.inslee.admin.model.form.sys;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
  * <p>
  */
 @Data
-public class UserLoginFrom {
+public class UserLoginForm {
     @NotNull(message = "用户名不能为空")
     @Pattern(regexp = "[a-zA-z][a-zA-Z0-9_]{3,11}", message = "非法的用户名")
     private String username;

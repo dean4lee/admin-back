@@ -17,7 +17,7 @@ import org.springframework.util.DigestUtils;
 public class Md5CredentialsMatcher extends SimpleCredentialsMatcher {
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        //获取登录from表单的密码
+        //获取登录Form表单的密码
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) token;
         String password = String.valueOf(usernamePasswordToken.getPassword());
 

@@ -9,8 +9,8 @@ import cn.inslee.admin.model.domain.sys.SysGroup;
 import cn.inslee.admin.model.domain.sys.SysGroupRole;
 import cn.inslee.admin.model.domain.sys.SysUser;
 import cn.inslee.admin.model.dto.sys.SysGroupDTO;
-import cn.inslee.admin.model.from.sys.GroupAddFrom;
-import cn.inslee.admin.model.from.sys.GroupUpdateFrom;
+import cn.inslee.admin.model.form.sys.GroupAddForm;
+import cn.inslee.admin.model.form.sys.GroupUpdateForm;
 import cn.inslee.admin.model.query.sys.GroupQuery;
 import cn.inslee.admin.service.sys.SysGroupService;
 import cn.inslee.admin.shiro.util.ShiroUtil;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -81,39 +80,39 @@ public class SysGroupCtrl {
     @Limiting
     @PostMapping("/add")
     @RequiresPermissions("sys:group:add")
-    public JsonResult add(@Validated @RequestBody GroupAddFrom groupFrom){
+    public JsonResult add(@Validated @RequestBody GroupAddForm groupForm){
         //copy角色属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysGroup group = new SysGroup()
                 .setId(Key.nextKey())
                 .setCreator(admin.getId())
                 .setCreationTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(groupFrom, group);
+        BeanUtils.copyProperties(groupForm, group);
 
         //copy关联的角色信息
-        List<SysGroupRole> sysGroupRoleList = this.copyGroupRole(groupFrom.getRoleIds(), group.getId());
+        List<SysGroupRole> sysGroupRoleList = this.copyGroupRole(groupForm.getRoleIds(), group.getId());
         return JsonResult.success(groupService.add(group, sysGroupRoleList));
     }
 
     /**
      * 用户组修改
-     * @param groupFrom
+     * @param groupForm
      * @return
      */
     @SystemLog("用户组修改")
     @Limiting
     @PutMapping("/update")
     @RequiresPermissions("sys:group:update")
-    public JsonResult update(@Validated @RequestBody GroupUpdateFrom groupFrom){
+    public JsonResult update(@Validated @RequestBody GroupUpdateForm groupForm){
         //copy用户组属性
         SysUser admin = ShiroUtil.getPrincipal(SysUser.class);
         SysGroup group = new SysGroup()
                 .setModifier(admin.getId())
                 .setModifyTime(System.currentTimeMillis());
-        BeanUtils.copyProperties(groupFrom, group);
+        BeanUtils.copyProperties(groupForm, group);
 
         //copy关联角色的属性
-        List<SysGroupRole> sysGroupRoleList = this.copyGroupRole(groupFrom.getRoleIds(), group.getId());
+        List<SysGroupRole> sysGroupRoleList = this.copyGroupRole(groupForm.getRoleIds(), group.getId());
 
         return JsonResult.success(groupService.update(group, sysGroupRoleList));
     }
